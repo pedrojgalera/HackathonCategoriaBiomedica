@@ -1,0 +1,440 @@
+// ****************************************************************************
+//
+//	Functions for MyApp domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Indices
+// 	DOMAIN  : MyApp
+//	MODULE  : Functions
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MyAppFunctions
+//
+// ****************************************************************************
+
+string getName(string prefix)
+{
+	string ret <- LiteralConvertLower(GetUserInput(DialogueInteractionCounter()));
+	ret <- Trim(RemovePrefix(ret, LiteralConvertLower(prefix)));
+
+	ret <- CapitalizeAll(ret);
+
+	return ret;
+}
+
+string unrollSignChunk(Parameter p)
+{
+	if(p.ParameterCategory == 'terminal')
+	{
+		return p.ParameterValue.SignChunk.SignChunkLiteral;
+	}
+	else
+	{
+		string s1 <- unrollSignChunk(p.ParameterOperand1);
+		string s2 <- unrollSignChunk(p.ParameterOperand2);
+		return LiteralConcat(s1, ' ', s2);
+	}
+}
+
+bool executeBackOfficeBooleanFunctionDomainSpecific(string backOfficeFunctionName, Parameters parameters)
+{
+    bool b;
+
+    if( backOfficeFunctionName == 'some_odontogram_fail' )
+    {
+		return someOdontogramFail() && !! bridgeOdontogramFail();
+ 	}
+	else if( backOfficeFunctionName == 'none_odontogram_fail' )
+    {
+		return !! someOdontogramFail() && !! bridgeOdontogramFail();
+ 	}
+ 	else if( backOfficeFunctionName == 'bridge_odontogram_fail' )
+ 	{
+ 		return bridgeOdontogramFail();
+ 	}
+ 	else if( backOfficeFunctionName == 'correct_medicine' )
+ 	{
+ 		return correctMedicine(parameters);
+ 	}
+ 	else if( backOfficeFunctionName == 'incorrect_medicine' )
+ 	{
+ 		return !! correctMedicine(parameters);
+ 	}
+    
+	return b;
+}
+
+
+
+ParameterFormats getFormatsFromParameterDomainSpecific (ParameterType parameterType)
+{
+    ParameterFormats formats;
+
+    /* In what follows the specific logics to get formats for parameters
+     * specific from your domain should be written as follows:
+     *
+     * //My domain
+     * if(!! formats)
+     * {
+     * 	formats <- getFormatsFromParameterTypeMyParameter(parameterType);
+     * }
+     *
+     * */
+
+    return formats;
+}
+
+Parameter normalizeParameterDomainSpecific(Parameter parameter)
+{
+    Parameter ret;
+
+    /* In what follows the specific logics to normalize parameters
+     * specific from your domain should be written as follows:
+     *
+     * if(!!ret)
+     * {
+     * 	ret <-normalizeParameterMyParameter(parameter)
+     * }
+     *
+     * */
+
+    return ret;
+}
+
+ScriptNodeStateName checkParameterDomainSpecific(Parameter parameter)
+{
+    ScriptNodeStateName state;
+
+        /* Process domain-dependent logics. */
+        /*
+         * For example:
+        // Domain: BankingManagement
+        if(!! state)
+        {
+            state <- checkParameterBankingManagement( parameter );
+        }
+        */
+
+    return state;
+}
+
+ScriptNodeStateName checkParameterIntersententialDomainSpecific(InfoItemHistory history, Parameter parameter)
+{
+    ScriptNodeStateName state;
+
+    /* Add domain-dependent logics. */
+
+    /*
+     * For example:
+    // Domain: BankingManagement
+    if(!! state)
+    {
+        state <- checkParameterIntersententialBankingManagement(history, parameter );
+    }
+    */
+
+    return state;
+}
+
+bool compatibleExpectationTypesDomainSpecific(ParameterType expected, ParameterType detected)
+{
+    bool ret <- False;
+
+	if(expected == 'allergy' && detected == 'medicine')
+	{
+		ret <- True;
+	}
+
+    return ret;
+}
+
+ProferenceChunk convertProferenceToExpectationDomainSpecific(ParameterType typeTarget, ProferenceChunk originalProference)
+{
+    ProferenceChunk ret;
+
+	if(typeTarget == 'allergy' && originalProference.Parameter.ParameterType == 'medicine')
+	{
+		ret.Parameter.ParameterType <- 'allergy';
+		ret.Parameter.ParameterCategory <- 'terminal';
+		ret.Parameter.ParameterValue.Allergy.MedicineAllergy <- originalProference.Parameter.ParameterValue.Medicine;
+		ret.Parameter.ParameterValue.Allergy.AllergyType <- 'medicine';
+	}
+
+    return ret;
+}
+
+Parameter executeBackOfficeFunctionDomainSpecific(string backOfficeFunctionName, Parameters parameters)
+{
+    Parameter p;
+
+    if( backOfficeFunctionName == 'capture_personalname' )
+    {
+        capturePersonalName();
+    }
+    else if( backOfficeFunctionName == 'print_parameters' )
+    {
+        printParameters();
+    }
+    else if( backOfficeFunctionName == 'create_report' )
+    {
+        createReport();
+    }
+    else if( backOfficeFunctionName == 'push_doctor_script' )
+    {
+        pushScript('Doctor');
+    }
+    else if( backOfficeFunctionName == 'load_profile' )
+    {
+        loadProfile();
+    }
+	else if( backOfficeFunctionName == 'annotate_odontogram' )
+    {
+        annotateOdontogram(parameters);
+    }
+	else if( backOfficeFunctionName == 'change_dentalpiece' )
+    {
+        changeDentalPiece(parameters);
+    }
+	else if( backOfficeFunctionName == 'clear_fails' )
+    {
+        clearDentalFails();
+		SpyMessage(getCustomData());
+    }
+	else if( backOfficeFunctionName == 'remove_fails' )
+    {
+        removeDentalFails();
+	}
+
+    return p;
+}
+
+BackOfficeReturn executeBackOfficeNegotiateFunctionDomainSpecific(string backOfficeFunctionName, InfoItemHistory history, Parameters parameters)
+{
+    BackOfficeReturn bor;
+
+    /*
+     * Include domain-specific processing, similar to:
+     *
+     * // Domain: MedicalAppointment
+     * if( backOfficeFunctionName == 'negotiate_datetime_medical_appointment' )
+     * {
+     * 	bor <- negotiateDateTimeMedicalAppointment(history, parameters);
+     * }
+     */
+
+    return bor;
+}
+
+bool coherentActionScopeDomainSpecific(string action, string scope)
+{
+    bool ret;
+    ret <- False;
+
+    /*
+     * //Define the processing for each specific domain.
+     * For example:
+     *
+     * // Domain: MedicalAppointment
+     * ret <- ret || coherentActionScopeMedicalAppointment(action, scope);
+     *
+     */
+
+    return ret;
+}
+
+string getActionDomainFromLemmaDomainSpecific(string lemma)
+{
+    string action <- 'unknown';
+
+    /*
+     * //Domain-specific processing:
+     *
+     * //For example:
+     * // Domain: MedicalAppointment
+     * action <- getActionDomainFromLemmaMedicalAppointment(lemma);
+     * if( action != 'unknown' )
+     * {
+     * 	return action;
+     * }
+     * else
+     * {
+     * 	// Domain: BankingManagement
+     * 	action <- getActionDomainFromLemmaBankingManagement(lemma);
+     * 	if( action != 'unknown' )
+     * 	{
+     * 		return action;
+     * 	}
+     * }
+     *
+     * */
+
+    return action;
+}
+
+bool canMergeWithSequentialDomainSpecific (Parameter parameter1, Parameter parameter2)
+{
+    bool ret;
+    switch (parameter1.ParameterType)
+    {
+
+        /*
+         * //Domain-specific process (default must be True)
+         *
+         * case 'peselnumber'
+         * {
+         * 	ret <- canMergeWithSequentialPeselNumber(parameter1, parameter2);
+         * }
+         *
+         * */
+
+        default
+        {
+            ret <- True;
+        }
+    }
+    return ret;
+}
+
+bool canMergeWithOrDomainSpecific(Parameter parameter1, Parameter parameter2)
+{
+    bool ret;
+
+    switch (parameter1.ParameterType)
+    {
+        /*
+        case 'medicalspeciality'
+        {
+            ret <- canMergeWithOrSpeciality(parameter1, parameter2);
+        }*/
+        default
+        {
+            ret <- True;
+        }
+    }
+    return ret;
+}
+
+bool canMergeWithAndDomainSpecific(Parameter parameter1, Parameter parameter2)
+{
+    bool ret;
+
+    switch (parameter1.ParameterType)
+    {
+        /*
+        case 'medicalspeciality'
+        {
+            ret <- canMergeWithAndSpeciality(parameter1, parameter2);
+        }
+        */
+        default
+        {
+            ret <- True;
+        }
+    }
+    return ret;
+}
+
+ParameterValue concatenateHistoryDomainSpecific (InfoItemHistory history, Parameter lastParameter)
+{
+    ParameterValue ret;
+
+    /*
+     * //Include domain-specific logics. For example:
+     * if(!! ret)
+     * {
+     * 	ret <- concatenateHistoryKernel(history, lastParameter);
+     * }
+    */
+
+    return ret;
+}
+
+bool dialogueActPassFilterDomainSpecific(string scriptDescriptor, DialogueAct dialogueAct)
+{
+    bool ret <- True;
+
+    /*
+     * //Define domain-dependent logics
+     *
+     * //For example:
+     *
+     * // Domain: MedicalAppointment
+     * ret <- ret && dialogueActPassFilterMedicalAppointment(scriptDescriptor, dialogueAct);
+     * // Domain: BankingManagement
+     * ret <- ret && dialogueActPassFilterBankingManagement(scriptDescriptor, dialogueAct);
+     *
+     * */
+
+    return ret;
+}
+
+
+
+ProferenceChunk preprocessParamDetailsDomainSpecific(ParameterDetails details, ProferenceChunk originalProference)
+{
+    ProferenceChunk ret <- originalProference;
+
+    /*
+	if (ret.Parameter.ParameterType == 'datetime' && details == 'duration'){
+        ret.Parameter.ParameterValue.DateTime.DateTimeRole = 'duration';
+    }*/
+
+    return ret;
+}
+
+
+bool excludeSensoElement (ProferenceChunk sensoElement) {
+    return False;
+}
+
+
+ProferenceChunk processSensoElement (ProferenceChunk sensoElement) 
+{
+    ProferenceChunk p <- sensoElement;
+
+	if(Filled(p.Parameter.ParameterValue.DateTime.GeneralTime.BaseTime.Hour))
+	{
+		p.Parameter.ParameterType <- 'dentalpiece';
+		DentalPiece dp;
+		dp.DentalQuadrant <- p.Parameter.ParameterValue.DateTime.GeneralTime.BaseTime.Hour / 10;
+		dp.DentalPieceNumber <- p.Parameter.ParameterValue.DateTime.GeneralTime.BaseTime.Hour % 10;
+		Erase(p.Parameter.ParameterValue);
+		p.Parameter.ParameterValue.DentalPiece <- dp;
+	}
+
+    return p;
+}
+
+
+procedure resetUserMemCountersArray () {
+ }
+
+procedure resetUserMemFlagsArray () {
+}
+
+procedure resetUserMemLightsArray () {
+}
+
+procedure settleLights (){
+}
+
+CustomData initializeCustomData()
+{
+    CustomData cdata;
+    Dict propFiles;
+    cdata.DomainPropFiles <- propFiles;
+    return cdata;
+}
+
+ProferenceChunk preprocessProferenceForPolarQuestionDomainSpecific(ProferenceChunk proference) {
+    ProferenceChunk ret <- proference;
+
+    return ret;
+}
+
+ProferenceChunk preprocessActionDomainDomainSpecific(ProferenceChunk proference, Action actionExpectations, PolarQuestion isPolarQuestion) {
+    ProferenceChunk ret <- proference;
+
+    return ret;
+}

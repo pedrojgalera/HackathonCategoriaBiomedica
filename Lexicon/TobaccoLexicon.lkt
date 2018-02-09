@@ -1,0 +1,30 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+("cigarro", lexTobaccoCigars)
+("cigarros", lexTobaccoCigars)
+("cigarrillo", lexTobaccoCigars)
+("cigarrillos", lexTobaccoCigars)
+("puro", lexTobaccoCigars)
+("puros", lexTobaccoCigars)
+("pitillo", lexTobaccoCigars)
+("pitillos", lexTobaccoCigars)
+
+("paquete", lexTobaccoPackage)
+("paquetes", lexTobaccoPackage)
+("caja", lexTobaccoPackage)
+("cajas", lexTobaccoPackage)
+("cajetilla", lexTobaccoPackage)
+("cajetillas", lexTobaccoPackage)

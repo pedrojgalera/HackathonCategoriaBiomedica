@@ -1,0 +1,172 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+(ScriboScheme GenerateWelcome: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'social' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'greeting' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'offer') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'welcomedoctor'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-doctor-welcome');
+  	}
+)
+
+(ScriboScheme ConfirmPatientName: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'propositional' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'confirm') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'patientname'
+		&& parametersContainsParameterType ( #OBJLOCUTIO-1.Parameters, 'patientprofile' )
+	}
+	ScriboAction
+	{
+		Parameter parameter <- parametersRecoverParameterType ( #OBJLOCUTIO-1.Parameters, 'patientprofile' );	
+		string name <- parameter.ParameterValue.PatientProfile.PersonalName.PersonalNameValue;
+		DateTime dt <- parameter.ParameterValue.PatientProfile.DateTime;
+		Erase(dt.BaseDate.Year);
+
+		GenerateMainAnswer('msg-confirm-patient-name-part1');
+		SetMainAnswer(name);
+		SetMainAnswer(" ");
+		GenerateMainAnswer('msg-confirm-patient-name-part2');
+		SetMainAnswer(dateTimeToString(dt));
+		GenerateMainAnswer('msg-confirm-patient-name-part3');
+  	}
+)
+
+(ScriboScheme PatientFailure: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'patient') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'failure'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-failure');
+  	}
+)
+
+(ScriboScheme AskTelephone: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'start') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'odontogram'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-start-odontogram');
+  	}
+)
+
+(ScriboScheme AskTelephone: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'propose') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'treatment'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-propose-treatment');
+  	}
+)
+
+(ScriboScheme AskTelephone: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'propose') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'appointment'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-propose-appointment');
+  	}
+)
+
+(ScriboScheme AskTelephone: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'treatmentagain'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-propose-appointment-again');
+  	}
+)
+
+(ScriboScheme ConfirmPatientName: [ DialogueAct DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'allergy') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'parameter' &&
+		parametersContainsParameterType ( #OBJLOCUTIO-1.Parameters, 'medicine' ) &&
+
+		#OBJLOCUTIO-2.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-2.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-2.TaskDialogueAct.Action, 'allergy') &&
+  		#OBJLOCUTIO-2.TaskDialogueAct.Scope == 'parameter' &&
+		parametersContainsParameterType ( #OBJLOCUTIO-2.Parameters, 'patientprofile' )
+	}
+	ScriboAction
+	{
+		Parameter p1 <- parametersRecoverParameterType ( #OBJLOCUTIO-1.Parameters, 'medicine' );	
+		Parameter p2 <- parametersRecoverParameterType ( #OBJLOCUTIO-2.Parameters, 'patientprofile' );	
+
+		// TODO
+		SpyMessage("AQUI ESTAMOS INCORRECTO");
+		SpyMessage(p1);
+		SpyMessage(p2);
+		SpyMessage("");
+  	}
+)
+
+(ScriboScheme ConfirmPatientName: [ DialogueAct DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'implicit') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'parameter' &&
+		parametersContainsParameterType ( #OBJLOCUTIO-1.Parameters, 'medicine' ) 
+	}
+	ScriboAction
+	{
+		Parameter p1 <- parametersRecoverParameterType ( #OBJLOCUTIO-1.Parameters, 'medicine' );	
+
+		// TODO
+		SpyMessage("AQUI ESTAMOS CORRECTO");
+		SpyMessage(p1);
+		SpyMessage("");
+  	}
+)
+

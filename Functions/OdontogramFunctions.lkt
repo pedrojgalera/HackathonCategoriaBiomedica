@@ -1,0 +1,414 @@
+// ****************************************************************************
+//
+//	Functions for MyApp domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Indices
+// 	DOMAIN  : MyApp
+//	MODULE  : Functions
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MyAppFunctions
+//
+// ****************************************************************************
+
+procedure annotateOdontogram(Parameters parameters)
+{
+	clearDentalFails();
+
+	for(int i <- 1; i <= BatchSize(parameters); i++)
+	{
+		Parameter p1;
+		BatchRecoverPosition(parameters, i, p1);
+		Parameters unrolled <- unrollParameters(p1);
+
+		for(int j <- 1; j <= BatchSize(unrolled); j++)
+		{
+			Parameter p2;
+			BatchRecoverPosition(unrolled, j, p2);
+			
+			if(p2.ParameterType == 'dentalpathology')
+			{
+				annotateDentalPathology(p2.ParameterValue.DentalPathology);
+			}
+			else
+			{
+				annotateDentalTreatment(p2.ParameterValue.DentalTreatment);
+			}
+		}		
+	}
+}
+
+procedure clearDentalFails()
+{
+	CustomData cdata <- getCustomData();
+	DentalFails dfs <- cdata.Odontogram.DentalFails;
+	
+	for(int i <- 1; i <= BatchSize(dfs); i++)
+	{
+		DentalFail df;
+		BatchRecoverPosition(dfs, i, df);
+
+		if(Filled(df.DentalPathology) && df.DentalFailReason == 'CORRECT')
+		{
+			BatchInsertEnd(cdata.Odontogram.DentalPathologies, df.DentalPathology);			
+		}
+		else if(Filled(df.DentalTreatment) && df.DentalFailReason == 'CORRECT')
+		{
+			BatchInsertEnd(cdata.Odontogram.DentalTreatments, df.DentalTreatment);			
+		}
+	}
+	Erase(cdata.Odontogram.DentalFails);
+	setCustomData(cdata);		
+}
+
+Parameters unrollParameters(Parameter p)
+{
+	Parameters ret;
+
+	if(p.ParameterCategory == 'terminal')
+	{
+		BatchInsertEnd(ret, p);
+	}
+	else
+	{
+		BatchInsertEnd(ret, p.ParameterOperand1);
+		BatchInsertEnd(ret, p.ParameterOperand2);
+	}
+
+	return ret;
+}
+
+procedure annotateDentalPathology(DentalPathology pathology)
+{
+	DentalFail df;
+	df.DentalPathology <- pathology;
+
+	if(incorrectPiece(pathology.DentalLocation.DentalPiece))
+	{
+		df.DentalFailReason <- 'NO_SUCH_PIECE';
+	}
+	else if(absentPiece(pathology.DentalLocation.DentalPiece))
+	{
+		df.DentalFailReason <- 'PREVIOUS_ABSENT_PIECE';
+	}
+
+	if(Filled(df.DentalFailReason))
+	{
+		insertDentalFail(df);
+	}
+	else
+	{
+		df.DentalFailReason <- 'CORRECT';
+		insertDentalFail(df);
+	}
+}
+
+procedure annotateDentalTreatment(DentalTreatment treatment)
+{
+	DentalFail df;
+	df.DentalTreatment <- treatment;
+	if(incorrectPiece(treatment.DentalLocation.DentalPiece) && treatment.DentalTreatmentType != 'puente fijo')
+	{
+		df.DentalFailReason <- 'NO_SUCH_PIECE';
+	}	
+	else if(incorrectPiece(treatment.DentalLocation.DentalInitialPiece) && treatment.DentalTreatmentType == 'puente fijo')
+	{
+		df.DentalFailReason <- 'NO_SUCH_PIECE';
+	}	
+	else if(incorrectPiece(treatment.DentalLocation.DentalFinalPiece) && treatment.DentalTreatmentType == 'puente fijo')
+	{
+		df.DentalFailReason <- 'NO_SUCH_PIECE';
+	}	
+	else if(absentPiece(treatment.DentalLocation.DentalPiece) && treatment.DentalTreatmentType == 'empaste')
+	{
+		df.DentalFailReason <- 'PREVIOUS_ABSENT_PIECE';
+	}
+	else if(absentPiece(treatment.DentalLocation.DentalInitialPiece) && treatment.DentalTreatmentType == 'puente fijo')
+	{
+		df.DentalFailReason <- 'PREVIOUS_ABSENT_PIECE';
+	}
+	else if(absentPiece(treatment.DentalLocation.DentalFinalPiece) && treatment.DentalTreatmentType == 'puente fijo')
+	{
+		df.DentalFailReason <- 'PREVIOUS_ABSENT_PIECE';
+	}
+	else if(presentPiece(treatment.DentalLocation.DentalPiece) && treatment.DentalTreatmentType == 'ausencia')
+	{
+		df.DentalFailReason <- 'PREVIOUS_PRESENT_PIECE';
+	}
+	else if(incorrectBridge(treatment.DentalLocation.DentalInitialPiece, treatment.DentalLocation.DentalFinalPiece) && treatment.DentalTreatmentType == 'puente fijo')
+	{
+		df.DentalFailReason <- 'BRIDGE_INCORRECT';
+	}
+
+	if(Filled(df.DentalFailReason))
+	{
+		insertDentalFail(df);
+	}
+	else
+	{
+		df.DentalFailReason <- 'CORRECT';
+		insertDentalFail(df);
+	}
+}
+
+bool absentPiece(DentalPiece dp)
+{
+	bool ret <- False;
+	CustomData cdata <- getCustomData();
+	DentalTreatments dts <- cdata.Odontogram.DentalTreatments;
+	for(int i <- 1; i <= BatchSize(dts); i++)
+	{
+		DentalTreatment dt;
+		BatchRecoverPosition(dts, i, dt);
+
+		if(dt.DentalLocation.DentalPiece == dp && dt.DentalTreatmentType == 'ausencia')
+		{
+			ret <- True;
+		}
+	}
+	DentalFails dfs <- cdata.Odontogram.DentalFails;
+	for(int i <- 1; i <= BatchSize(dfs); i++)
+	{
+		DentalFail df;
+		BatchRecoverPosition(dfs, i, df);
+
+		if(df.DentalTreatment.DentalLocation.DentalPiece == dp && df.DentalTreatment.DentalTreatmentType == 'ausencia')
+		{
+			ret <- True;
+		}
+	}
+
+	return ret;
+}
+
+bool presentPiece(DentalPiece dp)
+{
+	bool ret <- False;
+	CustomData cdata <- getCustomData();
+
+	DentalTreatments dts <- cdata.Odontogram.DentalTreatments;
+	for(int i <- 1; i <= BatchSize(dts); i++)
+	{
+		DentalTreatment dt;
+		BatchRecoverPosition(dts, i, dt);
+
+		if(dt.DentalLocation.DentalPiece == dp && dt.DentalTreatmentType == 'empaste')
+		{
+			ret <- True;
+		}
+		if(dt.DentalLocation.DentalInitialPiece == dp && dt.DentalTreatmentType == 'puente fijo')
+		{
+			ret <- True;
+		}
+		if(dt.DentalLocation.DentalFinalPiece == dp && dt.DentalTreatmentType == 'puente fijo')
+        {
+        	ret <- True;
+        }
+	}
+
+	DentalPathologies dps <- cdata.Odontogram.DentalPathologies;
+	for(int i <- 1; i <= BatchSize(dps); i++)
+	{
+		DentalPathology dpa;
+		BatchRecoverPosition(dps, i, dpa);
+
+		if(dpa.DentalLocation.DentalPiece == dp)
+		{
+			ret <- True;
+		}
+	}
+
+	DentalFails dfs <- cdata.Odontogram.DentalFails;
+	for(int i <- 1; i <= BatchSize(dfs); i++)
+	{
+		DentalFail df;
+		BatchRecoverPosition(dfs, i, df);
+
+		if(df.DentalTreatment.DentalLocation.DentalPiece == dp && df.DentalTreatment.DentalTreatmentType == 'empaste')
+		{
+			ret <- True;
+		}
+		if(df.DentalTreatment.DentalLocation.DentalInitialPiece == dp && df.DentalTreatment.DentalTreatmentType == 'puente fijo')
+		{
+			ret <- True;
+		}
+		if(df.DentalTreatment.DentalLocation.DentalFinalPiece == dp && df.DentalTreatment.DentalTreatmentType == 'puente fijo')
+		{
+			ret <- True;
+		}
+		if(df.DentalPathology.DentalLocation.DentalPiece == dp)
+        {
+        	ret <- True;
+        }
+	}
+
+	return ret;
+}
+
+bool incorrectBridge(DentalPiece dp1, DentalPiece dp2)
+{
+	return dp1.DentalQuadrant != dp2.DentalQuadrant;
+}
+
+bool incorrectPiece(DentalPiece dp)
+{
+	return dp.DentalQuadrant < 1 || dp.DentalQuadrant > 4 || dp.DentalPieceNumber < 1 || dp.DentalPieceNumber > 8;
+}
+
+procedure insertDentalFail(DentalFail df)
+{
+	CustomData cdata <- getCustomData();
+	BatchInsertEnd(cdata.Odontogram.DentalFails, df);
+	setCustomData(cdata);	
+}
+
+bool someOdontogramFail()
+{
+	CustomData cdata <- getCustomData();
+	DentalFails dfs <- cdata.Odontogram.DentalFails;
+
+	bool ret <- False;
+	for(int i <- 1; i <= BatchSize(dfs); i++)
+	{
+		DentalFail df;
+		BatchRecoverPosition(dfs, i, df);		
+
+		if(df.DentalFailReason != 'CORRECT')
+		{
+			ret <- True;
+		}
+	}
+
+	return ret;
+}
+
+bool bridgeOdontogramFail()
+{
+	CustomData cdata <- getCustomData();
+	DentalFails dfs <- cdata.Odontogram.DentalFails;
+
+	bool ret <- False;
+	for(int i <- 1; i <= BatchSize(dfs); i++)
+	{
+		DentalFail df;
+		BatchRecoverPosition(dfs, i, df);
+
+		if(df.DentalFailReason == 'BRIDGE_INCORRECT')
+		{
+			ret <- True;
+		}
+	}
+
+	return ret;
+}
+
+DentalFail getLastOdontogramError()
+{
+	CustomData cdata <- getCustomData();
+	DentalFails dfs <- cdata.Odontogram.DentalFails;
+
+	DentalFail ret;
+	for(int i <- 1; i <= BatchSize(dfs); i++)
+	{
+		BatchRecoverPosition(dfs, i, ret);		
+
+		if(ret.DentalFailReason != 'CORRECT')
+		{
+			i <- BatchSize(dfs);
+		}
+	}
+
+	return ret;
+}
+
+procedure changeDentalPiece(Parameters parameters)
+{
+	DentalPiece dp;
+	Parameter p;
+	BatchRecoverPosition(parameters, 1, p);
+	dp <- p.ParameterValue.DentalPiece;
+
+	CustomData cdata <- getCustomData();
+	DentalFails dfs <- cdata.Odontogram.DentalFails;
+	DentalFails part1;
+	DentalFails part2;
+
+	DentalFail df;
+	int position;
+	for(int i <- 1; i <= BatchSize(dfs); i++)
+	{
+		BatchRecoverPosition(dfs, i, df);		
+
+		if(df.DentalFailReason != 'CORRECT')
+		{
+			position <- i + 1;
+			i <- BatchSize(dfs);
+		}
+		else
+		{
+			BatchInsertEnd(part1, df);
+		}
+	}
+	for(int i <- position; i <= BatchSize(dfs); i++)
+	{
+		DentalFail df2;
+		BatchRecoverPosition(dfs, i, df2);		
+		BatchInsertEnd(part2, df2);
+	}
+
+	cdata.Odontogram.DentalFails <- part1;
+	setCustomData(cdata);
+
+	if(Filled(df.DentalPathology))
+	{
+		df.DentalPathology.DentalLocation.DentalPiece <- dp;
+		annotateDentalPathology(df.DentalPathology);
+	}
+	else
+	{
+		df.DentalTreatment.DentalLocation.DentalPiece <- dp;
+		annotateDentalTreatment(df.DentalTreatment);
+	}
+
+	cdata <- getCustomData();
+	cdata.Odontogram.DentalFails <- BatchJoin(cdata.Odontogram.DentalFails, part2);
+	setCustomData(cdata);
+}
+
+procedure removeDentalFails()
+{
+	CustomData cdata <- getCustomData();
+	DentalFails dfs <- cdata.Odontogram.DentalFails;
+	DentalFails part1;
+	DentalFails part2;
+
+	DentalFail df;
+	int position;
+	for(int i <- 1; i <= BatchSize(dfs); i++)
+	{
+		BatchRecoverPosition(dfs, i, df);
+
+		if(df.DentalFailReason != 'CORRECT')
+		{
+			position <- i + 1;
+			i <- BatchSize(dfs);
+		}
+		else
+		{
+			BatchInsertEnd(part1, df);
+		}
+	}
+	for(int i <- position + 1; i <= BatchSize(dfs); i++)
+	{
+		DentalFail df2;
+		BatchRecoverPosition(dfs, i, df2);
+		BatchInsertEnd(part2, df2);
+	}
+
+	cdata.Odontogram.DentalFails <- BatchJoin(part1, part2);
+	setCustomData(cdata);
+}
+
+

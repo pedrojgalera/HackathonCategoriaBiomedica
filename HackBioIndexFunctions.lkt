@@ -1,0 +1,24 @@
+// ****************************************************************************
+//
+//	Indexfile for functions in MyApp domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Indices
+// 	DOMAIN  : MyApp
+//	MODULE  : -
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: AppIndexFunctions
+//
+// ****************************************************************************
+
+// App-level functions:
+	#Include "Functions/HackBioFunctions.lkt"
+	#Include "Functions/HackBioBackOfficeFunctions.lkt"
+	#Include "Functions/OdontogramFunctions.lkt"
+	#Include "Functions/GenerateOdontogramFunctions.lkt"
+
+
+
+

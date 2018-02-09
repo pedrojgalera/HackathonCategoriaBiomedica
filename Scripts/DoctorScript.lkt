@@ -1,0 +1,242 @@
+// ****************************************************************************
+//
+//	Scripting functions for MyApp domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Indices
+// 	DOMAIN  : MyApp
+//	MODULE  : Scripts
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MyAppScript
+//
+// ****************************************************************************
+
+DialogueScript createDialogueScriptDoctor ()
+{
+	DialogueScript script;
+	script.ScriptDescriptor <- 'Doctor';
+
+	// Trigger
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'patientprofile' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'dentalpathology' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'dentaltreatment' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'dentalpiece' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'medicine' );
+
+	// Info
+	ScriptInfoItem scriptInfoItem, emptyScriptInfoItem;
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType  <- 'core';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'action';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'scope';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'patientprofile';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'dentalpathology';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'dentaltreatment';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'dentalpiece';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'medicine';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	script <- defaultNode(script, 0);
+
+ 	// NODE - loadProfile
+	script <- createBranchNodeNoWait(script, 1, 'loadProfile');
+	script <- modifyBranchNodeState(script, 'loadProfile', 'active');
+	script <- addBranchActionGeneral0Parameter(script, 'loadProfile', 'load_profile');
+	script <- modifyBranchNodeMessage(script, 'loadProfile', 'social', 'greeting', 'offer', 'welcomedoctor');
+
+		// EDGE - always
+    	script <- createOutputBranch(script, 1, 'loadProfile', 'confirmPatient', 'always');
+
+ 	// NODE - confirmPatient
+	script <- createBranchNode(script, 1, 'confirmPatient');
+	script <- modifyBranchNodeMessageParameter(script, 'confirmPatient', 'question', 'propositional', 'confirm', 'patientname', 'patientprofile');
+
+		// EDGE - Yes
+		script <- createOutputBranch(script, 1, 'confirmPatient', 'startOdontogram', 'yes');
+		script <- addOutputBranchConditionCore(script, 'confirmPatient', 'startOdontogram', 'yes', 'basicanswer', 'agreement');
+
+        // EDGE - No
+		script <- createOutputBranch(script, 1, 'confirmPatient', 'exitFailure', 'no');
+		script <- addOutputBranchConditionCore(script, 'confirmPatient', 'exitFailure', 'no', 'basicanswer', 'disagreement');
+
+		// EDGE - Dontknow
+		script <- createOutputBranch(script, 1, 'confirmPatient', 'exitFailure', 'dontknow');
+		script <- addOutputBranchConditionCore(script, 'confirmPatient', 'exitFailure', 'dontknow', 'basicanswer', 'dontknow');
+
+		// EDGE - Uncertain
+		script <- createOutputBranch(script, 1, 'confirmPatient', 'exitFailure', 'uncertain');
+		script <- addOutputBranchConditionCore(script, 'confirmPatient', 'exitFailure', 'uncertain', 'basicanswer', 'uncertain');
+
+	// NODE - exitFailure
+	script <- createBranchNodeNoWait(script, 1, 'exitFailure');
+	script <- modifyBranchNodeMessage(script, 'exitFailure', 'statement', 'inform', 'patient', 'failure');
+
+	// NODE - startOdontogram
+	script <- createBranchNodeNoWait(script, 1, 'startOdontogram');
+	script <- modifyBranchNodeMessage(script, 'startOdontogram', 'statement', 'inform', 'start', 'odontogram');
+
+		// EDGE - always
+    	script <- createOutputBranch(script, 1, 'startOdontogram', 'continueOdontogram', 'always');
+
+	// NODE - continueOdontogram
+	script <- createBranchNode(script, 1, 'continueOdontogram');
+
+		// EDGE - Digested(DentalPathology) - NotDigested(DentalTreatment)
+		script <- createOutputBranch(script, 1, 'continueOdontogram', 'checkOdontogram', 'digestedPathology');
+		script <- addOutputBranchConditionNotCore(script, 'continueOdontogram', 'checkOdontogram', 'digestedPathology', 'basicanswer', 'disagreement');
+		script <- addOutputBranchConditionParameterDigested(script, 'continueOdontogram', 'checkOdontogram', 'digestedPathology', 'dentalpathology');
+		script <- addOutputBranchConditionParameterNotDigested(script, 'continueOdontogram', 'checkOdontogram', 'digestedPathology', 'dentaltreatment');
+		script <- addOutputBranchActionGeneral1Parameter(script, 'continueOdontogram', 'checkOdontogram', 'digestedPathology', 'annotate_odontogram', 'dentalpathology');
+
+		// EDGE - NotDigested(DentalPathology) - Digested(DentalTreatment)
+		script <- createOutputBranch(script, 1, 'continueOdontogram', 'checkOdontogram', 'digestedTreatment');
+		script <- addOutputBranchConditionNotCore(script, 'continueOdontogram', 'checkOdontogram', 'digestedTreatment', 'basicanswer', 'disagreement');
+		script <- addOutputBranchConditionParameterNotDigested(script, 'continueOdontogram', 'checkOdontogram', 'digestedTreatment', 'dentalpathology');
+		script <- addOutputBranchConditionParameterDigested(script, 'continueOdontogram', 'checkOdontogram', 'digestedTreatment', 'dentaltreatment');
+		script <- addOutputBranchActionGeneral1Parameter(script, 'continueOdontogram', 'checkOdontogram', 'digestedTreatment', 'annotate_odontogram', 'dentaltreatment');
+
+		// EDGE - Digested(DentalPathology) - Digested(DentalTreatment)
+		script <- createOutputBranch(script, 1, 'continueOdontogram', 'checkOdontogram', 'digestedPathologyTreatment');
+		script <- addOutputBranchConditionNotCore(script, 'continueOdontogram', 'checkOdontogram', 'digestedPathologyTreatment', 'basicanswer', 'disagreement');
+		script <- addOutputBranchConditionParameterDigested(script, 'continueOdontogram', 'checkOdontogram', 'digestedPathologyTreatment', 'dentalpathology');
+		script <- addOutputBranchConditionParameterDigested(script, 'continueOdontogram', 'checkOdontogram', 'digestedPathologyTreatment', 'dentaltreatment');
+		script <- addOutputBranchActionGeneral2Parameter(script, 'continueOdontogram', 'checkOdontogram', 'digestedPathologyTreatment', 'annotate_odontogram', 'dentalpathology', 'dentaltreatment');
+
+		// EDGE - Scope(Finished)
+		script <- createOutputBranch(script, 1, 'continueOdontogram', 'proposeNextTreatment', 'finishodontogram');
+		script <- addOutputBranchConditionScope(script, 'continueOdontogram', 'proposeNextTreatment', 'finishodontogram', 'finishodontogram');
+		script <- addOutputBranchActionGeneral(script, 'continueOdontogram', 'proposeNextTreatment', 'finishodontogram', 'clear_fails');
+
+		// TODO LOS NOes
+
+	// NODE - checkOdontogram
+	script <- createBranchNodeNoWait(script, 1, 'checkOdontogram');
+
+		// EDGE - SomeOdontogramFail
+    	script <- createOutputBranch(script, 1, 'checkOdontogram', 'informOdontogramFail', 'error');
+       	script <- addOutputBranchConditionGeneral(script, 'checkOdontogram', 'informOdontogramFail', 'error', 'some_odontogram_fail');
+
+		// EDGE - NoneOdontogramFail
+    	script <- createOutputBranch(script, 1, 'checkOdontogram', 'echoOdontogram', 'correct');
+       	script <- addOutputBranchConditionGeneral(script, 'checkOdontogram', 'echoOdontogram', 'correct', 'none_odontogram_fail');
+
+		// EDGE - BridgeOdontogramFail
+       	script <- createOutputBranch(script, 1, 'checkOdontogram', 'informBridgeFail', 'bridge');
+       	script <- addOutputBranchConditionGeneral(script, 'checkOdontogram', 'informBridgeFail', 'bridge', 'bridge_odontogram_fail');
+
+	// NODE - informBridgeFail
+	script <- createBranchNodeNoWait(script, 1, 'informBridgeFail');
+	script <- modifyBranchNodeMessage(script, 'informBridgeFail', 'statement', 'inform', 'error', 'odontogram');
+
+		// EDGE - always
+       	script <- createOutputBranch(script, 1, 'informBridgeFail', 'continueOdontogram', 'always');
+
+	// NODE - informOdontogramFail
+	script <- createBranchNode(script, 1, 'informOdontogramFail');
+	script <- modifyBranchNodeMessage(script, 'informOdontogramFail', 'statement', 'inform', 'error', 'odontogram');
+
+		// EDGE - Digested(DentalPiece)
+    	script <- createOutputBranch(script, 1, 'informOdontogramFail', 'checkOdontogram', 'digested');
+		script <- addOutputBranchConditionParameterDigested(script, 'informOdontogramFail', 'checkOdontogram', 'digested', 'dentalpiece');
+		script <- addOutputBranchActionGeneral1Parameter(script, 'informOdontogramFail', 'checkOdontogram', 'digested', 'change_dentalpiece', 'dentalpiece');
+
+		// EDGE - NotDigested(DentalPiece)
+       	script <- createOutputBranch(script, 1, 'informOdontogramFail', 'checkOdontogram', 'notdigested');
+   		script <- addOutputBranchConditionParameterNotDigested(script, 'informOdontogramFail', 'checkOdontogram', 'notdigested', 'dentalpiece');
+   		script <- addOutputBranchActionGeneral(script, 'informOdontogramFail', 'checkOdontogram', 'notdigested', 'remove_fails');
+
+	// NODE - echoOdontogram
+	script <- createBranchNodeNoWait(script, 1, 'echoOdontogram');
+	script <- modifyBranchNodeMessage(script, 'echoOdontogram', 'statement', 'inform', 'echo', 'odontogram');
+
+		// EDGE - always
+    	script <- createOutputBranch(script, 1, 'echoOdontogram', 'continueOdontogram', 'always');
+
+	// NODE - proposeNextTreatment
+	script <- createBranchNode(script, 1, 'proposeNextTreatment');
+	script <- modifyBranchNodeMessage(script, 'proposeNextTreatment', 'statement', 'inform', 'propose', 'treatment');
+
+		// EDGE - Digested(Medicine)
+    	script <- createOutputBranch(script, 1, 'proposeNextTreatment', 'checkMedicine', 'digested');
+    	script <- addOutputBranchConditionParameterDigested(script, 'proposeNextTreatment', 'checkMedicine', 'digested', 'medicine');
+
+ 		// EDGE - NotDigested(Medicine) - Yes
+        script <- createOutputBranch(script, 1, 'proposeNextTreatment', 'proposeNextTreatmentAgain', 'yes');
+        script <- addOutputBranchConditionParameterNotDigested(script, 'proposeNextTreatment', 'proposeNextTreatmentAgain', 'yes', 'medicine');
+        script <- addOutputBranchConditionCore(script, 'proposeNextTreatment', 'proposeNextTreatmentAgain', 'yes', 'basicanswer', 'agreement');
+		script <- modifyOutputBranchMessage(script, 'proposeNextTreatment', 'proposeNextTreatmentAgain', 'yes', 'question', 'whquestion', 'ask', 'treatmentagain');
+
+        // EDGE - NotDigested(Medicine) - No
+        script <- createOutputBranch(script, 1, 'proposeNextTreatment', 'proposeAppointment', 'no');
+        script <- addOutputBranchConditionParameterNotDigested(script, 'proposeNextTreatment', 'proposeAppointment', 'no', 'medicine');
+        script <- addOutputBranchConditionCore(script, 'proposeNextTreatment', 'proposeAppointment', 'no', 'basicanswer', 'disagreement');
+
+	// NODE - proposeNextTreatmentAgain
+    script <- createBranchNode(script, 1, 'proposeNextTreatmentAgain');
+
+    	// EDGE - Digested(Medicine)
+       	script <- createOutputBranch(script, 1, 'proposeNextTreatmentAgain', 'checkMedicine', 'digested');
+      	script <- addOutputBranchConditionParameterDigested(script, 'proposeNextTreatmentAgain', 'checkMedicine', 'digested', 'medicine');
+
+	// NODE - checkMedicine
+	script <- createBranchNodeNoWait(script, 1, 'checkMedicine');
+
+    	// EDGE - Correct(Medicine)
+      	script <- createOutputBranch(script, 1, 'checkMedicine', 'proposeAppointment', 'correct');
+      	script <- addOutputBranchConditionGeneral1Parameter(script, 'checkMedicine', 'proposeAppointment', 'correct', 'correct_medicine', 'medicine');
+		script <- modifyOutputBranchMessageParameter(script, 'checkMedicine', 'proposeAppointment', 'correct', 'statement', 'inform', 'implicit', 'parameter', 'medicine');
+		
+    	// EDGE - Incorrect(Medicine)
+      	script <- createOutputBranch(script, 1, 'checkMedicine', 'proposeNextTreatmentAgain', 'incorrect');
+      	script <- addOutputBranchConditionGeneral1Parameter(script, 'checkMedicine', 'proposeNextTreatmentAgain', 'incorrect', 'incorrect_medicine', 'medicine');
+		script <- modifyOutputBranchMessageParameter2(script, 'checkMedicine', 'proposeNextTreatmentAgain', 'incorrect', 'statement', 'inform', 'allergy', 'parameter', 'medicine', 'patientprofile');
+
+	// TODO
+
+	// NODE - proposeAppointment
+	script <- createBranchNode(script, 1, 'proposeAppointment');
+	script <- modifyBranchNodeMessage(script, 'proposeAppointment', 'statement', 'inform', 'propose', 'appointment');
+
+	script <- endScript(script,10);
+
+  	return script;
+}
+
+

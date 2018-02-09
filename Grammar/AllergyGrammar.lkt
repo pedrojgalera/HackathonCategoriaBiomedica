@@ -1,0 +1,33 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+(Allergy_Rule01:
+ 	[ Parameter -> Allergy ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'allergy';
+		^.ParameterValue.Allergy <- #1;
+	}
+)
+
+(Allergy_Rule02:
+ 	[ Allergy -> lexAllergy ]
+	{
+		^ <- #1;
+	}
+)
+
+
+

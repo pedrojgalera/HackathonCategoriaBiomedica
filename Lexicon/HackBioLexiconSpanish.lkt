@@ -1,0 +1,25 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+#Include "PersonalNameLexicon.lkt"
+#Include "AllergyLexicon.lkt"
+#Include "AllergyTypesLexicon.lkt"
+#Include "AllergensLexicon.lkt"
+#Include "AllergyLexicon.lkt"
+#Include "TobaccoLexicon.lkt"
+#Include "ActivePrinciplesLexicon.lkt"
+#Include "MedicinesLexicon.lkt"
+#Include "DentalLexicon.lkt"
+#Include "FinishOdontogramLexicon.lkt"

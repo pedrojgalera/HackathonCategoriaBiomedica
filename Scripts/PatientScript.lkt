@@ -1,0 +1,217 @@
+// ****************************************************************************
+//
+//	Scripting functions for MyApp domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Indices
+// 	DOMAIN  : MyApp
+//	MODULE  : Scripts
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MyAppScript
+//
+// ****************************************************************************
+
+DialogueScript createDialogueScriptPatient ()
+{
+	DialogueScript script;
+	script.ScriptDescriptor <- 'Manager';
+
+	// Trigger
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'personalname' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'datetime' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'phonenumber' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'medicine' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'allergy' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'tobacco' );
+
+	// Info
+	ScriptInfoItem scriptInfoItem, emptyScriptInfoItem;
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType  <- 'core';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'action';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'scope';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'personalname';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'datetime';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'phonenumber';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'medicine';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'allergy';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'tobacco';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	script <- defaultNode(script, 0);
+
+ 	// NODE - welcome
+	script <- createBranchNodeNoWait(script, 1, 'welcome');
+	script <- modifyBranchNodeState(script, 'welcome', 'active');
+	script <- modifyBranchNodeMessage(script, 'welcome', 'social', 'greeting', 'offer', 'welcome');
+
+		// EDGE - always
+    	script <- createOutputBranch(script, 1, 'welcome', 'askName', 'always');
+
+ 	// NODE - askName
+	script <- createBranchNode(script, 1, 'askName');
+	script <- modifyBranchNodeMessage(script, 'askName', 'question', 'whquestion', 'ask', 'name');
+	script <- modifyBranchNodeExpectations(script, 'askName', 'personalname');
+
+		// EDGE - Digested(PersonalName)
+		script <- createOutputBranch(script, 1, 'askName', 'askBirthDate', 'digested');
+		script <- addOutputBranchConditionParameterDigested(script, 'askName', 'askBirthDate', 'digested', 'personalname');
+
+        // EDGE - NotDigested(PersonalName)
+        script <- createOutputBranch(script, 1, 'askName', 'askBirthDate', 'notdigested');
+        script <- addOutputBranchConditionParameterNotDigested(script, 'askName', 'askBirthDate', 'notdigested', 'personalname');
+        script <- addOutputBranchActionGeneral(script, 'askName', 'askBirthDate', 'notdigested', 'capture_personalname');
+
+ 	// NODE - askBirthDate
+	script <- createBranchNode(script, 1, 'askBirthDate');
+	script <- modifyBranchNodeMessage(script, 'askBirthDate', 'question', 'whquestion', 'ask', 'birthdate');
+
+		// EDGE - Digested(DateTime)
+		script <- createOutputBranch(script, 1, 'askBirthDate', 'askTelephone', 'digested');
+		script <- addOutputBranchConditionParameterDigested(script, 'askBirthDate', 'askTelephone', 'digested', 'datetime');
+
+	// NODE - askTelephone
+    script <- createBranchNode(script, 1, 'askTelephone');
+    script <- modifyBranchNodeMessage(script, 'askTelephone', 'question', 'whquestion', 'ask', 'telephone');
+    script <- modifyBranchNodeExpectations(script, 'askTelephone', 'phonenumber');
+
+		// EDGE - Digested(PhoneNumber)
+    	script <- createOutputBranch(script, 1, 'askTelephone', 'askMedicine', 'digested');
+    	script <- addOutputBranchConditionParameterDigested(script, 'askTelephone', 'askMedicine', 'digested', 'phonenumber');
+
+	// NODE - askMedicine
+    script <- createBranchNode(script, 1, 'askMedicine');
+    script <- modifyBranchNodeMessage(script, 'askMedicine', 'question', 'whquestion', 'ask', 'medicine');
+
+		// EDGE - Digested(Medicine)
+    	script <- createOutputBranch(script, 1, 'askMedicine', 'askAlergie', 'digested');
+    	script <- addOutputBranchConditionParameterDigested(script, 'askMedicine', 'askAlergie', 'digested', 'medicine');
+
+ 		// EDGE - NotDigested(Medicine) - Yes
+        script <- createOutputBranch(script, 1, 'askMedicine', 'askMedicineAgain', 'yes');
+        script <- addOutputBranchConditionParameterNotDigested(script, 'askMedicine', 'askMedicineAgain', 'yes', 'medicine');
+        script <- addOutputBranchConditionCore(script, 'askMedicine', 'askMedicineAgain', 'yes', 'basicanswer', 'agreement');
+
+        // EDGE - NotDigested(Medicine) - No
+        script <- createOutputBranch(script, 1, 'askMedicine', 'askAlergie', 'no');
+        script <- addOutputBranchConditionParameterNotDigested(script, 'askMedicine', 'askAlergie', 'no', 'medicine');
+        script <- addOutputBranchConditionCore(script, 'askMedicine', 'askAlergie', 'no', 'basicanswer', 'disagreement');
+
+	// NODE - askMedicineAgain
+    script <- createBranchNode(script, 1, 'askMedicineAgain');
+    script <- modifyBranchNodeMessage(script, 'askMedicineAgain', 'question', 'whquestion', 'ask', 'medicineagain');
+
+    	// EDGE - Digested(Medicine)
+       	script <- createOutputBranch(script, 1, 'askMedicineAgain', 'askAlergie', 'digested');
+       	script <- addOutputBranchConditionParameterDigested(script, 'askMedicineAgain', 'askAlergie', 'digested', 'medicine');
+
+    // NODE - askAlergie
+    script <- createBranchNode(script, 1, 'askAlergie');
+    script <- modifyBranchNodeMessage(script, 'askAlergie', 'question', 'whquestion', 'ask', 'alergie');
+	script <- modifyBranchNodeExpectations(script, 'askAlergie', 'allergy');
+
+		// EDGE - Digested(Allergy)
+    	script <- createOutputBranch(script, 1, 'askAlergie', 'askTobacco', 'digested');
+    	script <- addOutputBranchConditionParameterDigested(script, 'askAlergie', 'askTobacco', 'digested', 'allergy');
+
+ 		// EDGE - NotDigested(Medicine) - Yes
+        script <- createOutputBranch(script, 1, 'askAlergie', 'askAlergieAgain', 'yes');
+        script <- addOutputBranchConditionParameterNotDigested(script, 'askAlergie', 'askAlergieAgain', 'yes', 'allergy');
+        script <- addOutputBranchConditionCore(script, 'askAlergie', 'askAlergieAgain', 'yes', 'basicanswer', 'agreement');
+
+        // EDGE - NotDigested(Medicine) - No
+        script <- createOutputBranch(script, 1, 'askAlergie', 'askTobacco', 'no');
+        script <- addOutputBranchConditionParameterNotDigested(script, 'askAlergie', 'askTobacco', 'no', 'allergy');
+        script <- addOutputBranchConditionCore(script, 'askAlergie', 'askTobacco', 'no', 'basicanswer', 'disagreement');
+
+	// NODE - askAlergieAgain
+    script <- createBranchNode(script, 1, 'askAlergieAgain');
+    script <- modifyBranchNodeMessage(script, 'askAlergieAgain', 'question', 'whquestion', 'ask', 'alergieagain');
+	script <- modifyBranchNodeExpectations(script, 'askAlergieAgain', 'allergy');
+
+    	// EDGE - Digested(Allergy)
+       	script <- createOutputBranch(script, 1, 'askAlergieAgain', 'askTobacco', 'digested');
+       	script <- addOutputBranchConditionParameterDigested(script, 'askAlergieAgain', 'askTobacco', 'digested', 'allergy');
+
+	// NODE - askTobacco
+    script <- createBranchNode(script, 1, 'askTobacco');
+    script <- modifyBranchNodeMessage(script, 'askTobacco', 'question', 'whquestion', 'ask', 'tobacco');
+
+		// EDGE - Digested(Tobacco)
+    	script <- createOutputBranch(script, 1, 'askTobacco', 'end', 'digested');
+    	script <- addOutputBranchConditionParameterDigested(script, 'askTobacco', 'end', 'digested', 'tobacco');
+
+ 		// EDGE - NotDigested(Medicine) - Yes
+        script <- createOutputBranch(script, 1, 'askTobacco', 'askTobaccoAgain', 'yes');
+        script <- addOutputBranchConditionParameterNotDigested(script, 'askTobacco', 'askTobaccoAgain', 'yes', 'tobacco');
+        script <- addOutputBranchConditionCore(script, 'askTobacco', 'askTobaccoAgain', 'yes', 'basicanswer', 'agreement');
+
+        // EDGE - NotDigested(Medicine) - No
+        script <- createOutputBranch(script, 1, 'askTobacco', 'end', 'no');
+        script <- addOutputBranchConditionParameterNotDigested(script, 'askTobacco', 'end', 'no', 'tobacco');
+        script <- addOutputBranchConditionCore(script, 'askTobacco', 'end', 'no', 'basicanswer', 'disagreement');
+
+	// NODE - askTobaccoAgain
+    script <- createBranchNode(script, 1, 'askTobaccoAgain');
+    script <- modifyBranchNodeMessage(script, 'askTobaccoAgain', 'question', 'whquestion', 'ask', 'tobaccoagain');
+	script <- modifyBranchNodeExpectations(script, 'askTobaccoAgain', 'tobacco');
+
+    	// EDGE - Digested(Tobacco)
+       	script <- createOutputBranch(script, 1, 'askTobaccoAgain', 'end', 'digested');
+       	script <- addOutputBranchConditionParameterDigested(script, 'askTobaccoAgain', 'end', 'digested', 'tobacco');
+
+	// NODE - end
+    script <- createBranchNodeNoWait(script, 1, 'end');
+    script <- modifyBranchNodeMessage(script, 'end', 'statement', 'inform', 'propose', 'end');
+	script <- addBranchActionGeneral0Parameter(script, 'end', 'print_parameters');
+	script <- addBranchActionGeneral0Parameter(script, 'end', 'create_report');
+	script <- addBranchActionGeneral0Parameter(script, 'end', 'push_doctor_script');
+
+	script <- endScript(script,10);
+
+  	return script;
+}
+
+

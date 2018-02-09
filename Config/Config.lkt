@@ -1,0 +1,20 @@
+#Define FDRELPATH '../fluencydistrib/'
+
+
+// Paths inclusion for fluencydistrib
+#Include < "../" FDRELPATH ".path.lkt" >
+
+
+// Path translation from fluencydistrib for this app
+#Include "PathConstants.lkt"
+
+
+// Runtime Path Constants (they're called from /Deployment)
+#Define KPROPPATH LiteralConcat('../', LiteralConcat(FDRELPATH, LiteralConcat('Fluency/Tools/Properties/','Kernel.properties')))
+#Define FLUENCYDOMSPATH LiteralConcat('../', LiteralConcat(FDRELPATH, 'Domains/'))
+
+
+// Local Path Constants
+#Define APPPROPPATH '../Properties/HackBio.properties'
+#Define BOPROPPATH '../Properties/BO.properties'
+

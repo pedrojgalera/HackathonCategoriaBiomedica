@@ -1,0 +1,168 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+(ScriboScheme GenerateWelcome: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'social' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'greeting' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'offer') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'welcome'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-welcome');
+  	}
+)
+
+(ScriboScheme AskName: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'name'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-ask-name');
+  	}
+)
+
+(ScriboScheme AskBirthDate: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'birthdate'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-ask-birthdate');
+  	}
+)
+
+(ScriboScheme AskTelephone: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'telephone'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-ask-telephone');
+  	}
+)
+
+(ScriboScheme AskMedicine: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'medicine'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-ask-medicine');
+  	}
+)
+
+(ScriboScheme AskMedicineAgain: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'medicineagain'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-ask-medicine-again');
+  	}
+)
+
+(ScriboScheme AskAlergie: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'alergie'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-ask-alergie');
+  	}
+)
+
+(ScriboScheme AskAlergieAgain: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'alergieagain'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-ask-alergie-again');
+  	}
+)
+
+(ScriboScheme AskTobacco: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'tobacco'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-ask-tobacco');
+  	}
+)
+
+(ScriboScheme AskTobaccoAgain: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'tobaccoagain'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-ask-tobacco-again');
+  	}
+)
+
+(ScriboScheme End: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'propose') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'end'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-end');
+  	}
+)

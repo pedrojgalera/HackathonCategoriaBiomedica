@@ -1,0 +1,21 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+#Include "PersonalNameGrammar.lkt"
+#Include "MedicineGrammar.lkt"
+#Include "AllergyGrammar.lkt"
+#Include "TobaccoGrammar.lkt"
+#Include "DentalGrammar.lkt" 
+#Include "FinishOdontogramGrammar.lkt" 

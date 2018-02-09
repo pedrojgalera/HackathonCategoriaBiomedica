@@ -1,0 +1,38 @@
+// ****************************************************************************
+//
+//	Scripting functions for MyApp domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Indices
+// 	DOMAIN  : MyApp
+//	MODULE  : Scripts
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MyAppScript
+//
+// ****************************************************************************
+
+procedure createDialogueScheme()
+{
+	DialogueScheme scheme;
+	DialogueScript script;
+
+	/* The descriptor for your app. */
+	scheme.DialogueSchemeDescriptor <- 'HackBio';
+
+	// COMMON SCRIPTS
+
+	// Script - Patient
+	script <- createDialogueScriptPatient();
+	BatchInsertEnd( scheme.DialogueScripts,	script );
+
+	// Script - Doctor
+	script <- createDialogueScriptDoctor();
+	BatchInsertEnd( scheme.DialogueScripts,	script );
+
+	MDScheme <- scheme;
+}
+
+#Include "Scripts/PatientScript.lkt"
+#Include "Scripts/DoctorScript.lkt"

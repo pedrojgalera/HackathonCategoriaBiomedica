@@ -1,0 +1,80 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+("del", lexPrepOf)
+
+// Patologías
+("caries", lexDentalPathologyType, 'caries')
+("picadura", lexDentalPathologyType, 'caries')
+
+("inflamación", lexDentalPathologyType, 'inflamación')
+("infección", lexDentalPathologyType, 'inflamación')
+
+// Tratamiento
+("falta", lexDentalTreatmentType, 'ausencia')
+("ausencia", lexDentalTreatmentType, 'ausencia')
+
+("empaste", lexDentalTreatmentType, 'empaste')
+("obturación", lexDentalTreatmentType, 'empaste')
+
+("puente fijo", lexDentalTreatmentType, 'puente fijo')
+
+
+// Caras de las piezas dentales
+("oclusal", lexDentalFace, 'oclusive')
+("ocluso", lexDentalFace, 'oclusive')
+("oclusiva", lexDentalFace, 'oclusive')
+
+("mesial", lexDentalFace, 'mesial')
+("mesio", lexDentalFace, 'mesial')
+
+("distal", lexDentalFace, 'distal')
+("disto", lexDentalFace, 'distal')
+
+("palatina", lexDentalFace, 'palatine')
+("palatino", lexDentalFace, 'palatine')
+
+("lingual", lexDentalFace, 'lingual')
+("linguo", lexDentalFace, 'lingual')
+
+("vestibular", lexDentalFace, 'vestibular')
+("vestibulo", lexDentalFace, 'vestibular')
+
+("de cuello", lexDentalFace, 'cuello')
+
+// Cuadrantes
+("superior derecho", DentalQuadrant, 1)
+("derecho superior", DentalQuadrant, 1)
+
+("superior izquierdo", DentalQuadrant, 2)
+("izquierdo superior", DentalQuadrant, 2)
+
+("inferior izquierdo", DentalQuadrant, 3)
+("izquierdo inferior", DentalQuadrant, 3)
+
+("inferior derecho", DentalQuadrant, 4)
+("derecho inferior", DentalQuadrant, 4)
+
+// Dientes
+("incisivo central", DentalPieceNumber, 1)
+("incisivo lateral", DentalPieceNumber, 2)
+("canino", DentalPieceNumber, 3)
+("colmillo", DentalPieceNumber, 3)
+("premolar", lexPremolar)
+("molar", lexMolar)
+("cordal", lexMolar)
+
+
+

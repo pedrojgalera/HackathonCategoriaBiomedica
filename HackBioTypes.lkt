@@ -1,0 +1,73 @@
+classDef:StructureComplex
+(
+    ParameterValue :
+    (
+        Number,
+        Ordinal,
+        Letter,
+        DateTime,
+        CountryPlace,
+        PhoneNumber,
+        MoneyAmount,
+        SignChunk,
+        Address,
+        PeselNumber,
+        RegonNumber,
+
+        PersonalName,
+        Medicine,
+        Allergy,
+        Tobacco,
+		PatientProfile,
+		DentalPathology,
+		DentalTreatment,
+		DentalPiece
+    )
+)
+
+
+classDef:StructureComplex
+(
+    CustomData :
+    (
+        CustomDataType,
+        DictKernel,
+        DictKernelKeys,
+        StrArrayKernelKeys,
+        DictApp,
+        DictAppKeys,
+        StrArrayAppKeys,
+        DomainPropFiles,
+
+		Odontogram
+    )
+)
+
+classDef:Synonym
+(
+    DictKernel, DictApp = Dict
+)
+
+classDef:Synonym
+(
+    DictKernelKeys, DictAppKeys = stringBatch
+)
+
+classDef:Synonym
+(
+    StrArrayKernelKeys, StrArrayAppKeys = stringArray
+)
+
+classDef:Synonym
+(
+    DomainPropFiles = Dict
+)
+
+classDef:ElementLiteral
+(
+    CustomDataType
+)
+
+#Include "Types/SemanticTypes.lkt"
+#Include "Types/LexicalTypes.lkt"
+#Include "Types/DentalTypes.lkt"

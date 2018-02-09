@@ -1,0 +1,109 @@
+// ****************************************************************************
+//
+//      Main setup file for fluency project: CallSteering app
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency
+// 	DOMAIN  : -
+//	MODULE  : -
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: CallSteering
+//
+// ****************************************************************************
+
+lektaProject
+    projectHead
+        projectDescriptor	: "HackBio"
+        projectLanguageScope	: [ English, Polish, Spanish ]
+        projectOperationScope	: [ Fluency ]
+        projectInterfaceScope   : [ Written, Spoken ]
+        projectCompileOutput 	: "Deployment/HackBio.olk"
+
+    projectSetup
+        setupParserRoots = ProferenceChunk, QuestionMark
+        setupTokenizerNormalizeSpecActivate
+        setupTokenizerNormalizeInputActivate
+        setupRuntimeSpyMessageOn
+        setupTokenizerSpellingChecker //Again activated
+        setupParserTokenNotFounds = lexSignChunk
+        ParlanceSensor:On
+
+    //#Include "Kernel/Tools/Polyglot/ParlanceSensorCorpora.lkt"
+
+    /* Mandatory: */
+    #Include "Config/Config.lkt"
+
+
+    classModel
+        #Include < FLUINCLUDE "MainTypes.lkt" >
+        #Include "HackBioTypes.lkt"
+
+    functionModel
+        #Include < FLUINCLUDE "MainFunctions.lkt" >
+        #Include "HackBioIndexFunctions.lkt"
+
+    lexicalModel forLanguage English
+        #Include < FLUINCLUDE "MainEnglishLexicon.lkt" >
+
+    lexicalModel forLanguage Polish
+        #Include < FLUINCLUDE "MainPolishLexicon.lkt" >
+
+	lexicalModel forLanguage Spanish
+        #Include < FLUINCLUDE "MainSpanishLexicon.lkt" >
+        #Include "Lexicon/HackBioLexiconSpanish.lkt"
+
+    grammaticalModel forLanguage English
+        #Include < FLUINCLUDE "MainEnglishGrammar.lkt" >
+
+    grammaticalModel forLanguage Polish
+        #Include < FLUINCLUDE "MainPolishGrammar.lkt" >
+
+	grammaticalModel forLanguage Spanish
+        #Include < FLUINCLUDE "MainSpanishGrammar.lkt" >
+        #Include "Grammar/HackBioGrammarSpanish.lkt"
+
+    conversationalModel
+        #Include < FLUBRAINDIALOGUEMANAGER "MindBoardStructure.lkt" >
+
+    LaunchConversation:
+    {
+        LaunchSendToMindBoard: (DialogueState = (DialoguePhase: 'booting_dialogue') )
+    }
+
+    ColligoSchemata
+        #Include < FLUBRAINDIALOGUEMANAGER "Phases/ColligoSchemata.lkt" >
+
+    SensoSchemata
+        #Include < FLUBRAINDIALOGUEMANAGER "Phases/SensoSchemata.lkt" >
+
+    CogitoSchemata
+        #Include < FLUBRAINDIALOGUEMANAGER "Phases/CogitoSchemata.lkt" >
+
+    RespondoSchemata
+        #Include < FLUBRAINDIALOGUEMANAGER "Phases/RespondoSchemata.lkt" >
+
+    LocutioSchemata
+        #Include < FLUBRAINDIALOGUEMANAGER "Phases/LocutioSchemata.lkt" >
+
+    functionModel
+        #Include < FLUBRAINDIALOGUEMANAGER "Heart/MainDialogueManagerFunctions.lkt" >
+        #Include < FLUBRAINDIALOGUEMANAGER "DialogueScriptsKernel.lkt" >
+        #Include "HackBioScripts.lkt"
+		#Include "Functions/HackBioMindboardFunctions.lkt"
+
+    scriboModel forLanguage English
+    	ScriboSchemata
+      		#Include < FLUINCLUDE "MainGeneration.lkt" >
+      		#Include "HackBioIndexGeneration.lkt"
+
+  	scriboModel forLanguage Polish
+    	ScriboSchemata
+      		#Include < FLUINCLUDE "MainGeneration.lkt" >
+      		#Include "HackBioIndexGeneration.lkt"
+
+	scriboModel forLanguage Spanish
+    	ScriboSchemata
+      		#Include < FLUINCLUDE "MainGeneration.lkt" >
+      		#Include "HackBioIndexGeneration.lkt"

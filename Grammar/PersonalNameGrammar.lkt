@@ -1,0 +1,55 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+(PersonalName_Rule01:
+ 	[ Parameter -> PersonalName ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'personalname';
+		^.ParameterValue.PersonalName <- #1;
+	}
+)
+
+(PersonalName_Rule02:
+ 	[ PersonalName -> lexPersonalName Parameter [+$]& ]
+	{
+		if(#2.ParameterType == 'signchunk')
+		{
+			^.PersonalNameValue <- unrollSignChunk(#2);
+		}
+		else
+		{
+			Fail();
+		}
+	}
+)
+
+(PersonalName_Rule02:
+ 	[ PersonalName -> lexPersonalName ]
+	{
+		string s <- getName(ShapeToLiteral(TokenInputText(1)));
+		if(LiteralSize(s) > 0)
+		{
+			^.PersonalNameValue <- s;
+		}
+		else
+		{
+			Fail();
+		}
+	}
+)
+
+
+

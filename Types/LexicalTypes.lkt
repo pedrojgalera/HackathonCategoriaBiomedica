@@ -1,0 +1,32 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+classDef:Void
+(
+	lexPersonalName,
+	lexTobaccoPackage,
+	lexTobaccoCigars,
+	lexFinishOdontogramTerm
+)
+
+classDef:Synonym
+(
+	lexMedicine = Medicine
+)
+
+classDef:Synonym
+(
+	lexAllergy = Allergy
+)

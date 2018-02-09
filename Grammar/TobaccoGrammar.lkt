@@ -1,0 +1,42 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+(Tobacco_Rule01:
+ 	[ Parameter -> Tobacco ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'tobacco';
+		^.ParameterValue.Tobacco <- #1;
+	}
+)
+
+(Tobacco_Rule02:
+ 	[ Tobacco -> Number lexTobaccoCigars ]
+	{
+		^.TobaccoQuantity <- #1.NumberValue;
+		^.TobaccoType <- 'cigars';
+	}
+)
+
+(Tobacco_Rule03:
+ 	[ Tobacco -> Number lexTobaccoPackage ]
+	{
+		^.TobaccoQuantity <- #1.NumberValue;
+		^.TobaccoType <- 'package';
+	}
+)
+
+
+

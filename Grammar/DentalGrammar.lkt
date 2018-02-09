@@ -1,0 +1,259 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+// DentalPathology
+
+(DentalPathology_Rule01:
+ 	[ Parameter -> DentalPathology ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'dentalpathology';
+		^.ParameterValue.DentalPathology <- #1;
+	}
+)
+
+(DentalPathology_Rule02:
+ 	[ DentalPathology -> < lexDentalPathologyType % DentalLocation > ]
+	{
+		^.DentalPathologyType <- #1;
+		^.DentalLocation <- #2;
+	}
+)
+
+(DentalPathology_Rule03:
+ 	[ Parameter -> DentalPathology lexConjAnd < < lexPrepIn | lexPrepOf > lexDetThe? >? Number ]
+	{
+		^.ParameterCategory <- 'conjunction';
+		^.ParameterType <- 'dentalpathology';
+
+		^.ParameterOperand1.ParameterValue.DentalPathology <- #1;
+		^.ParameterOperand1.ParameterType <- 'dentalpathology';
+		^.ParameterOperand1.ParameterCategory <- 'terminal';
+
+		^.ParameterOperand2.ParameterValue.DentalPathology <- #1;
+		^.ParameterOperand2.ParameterType <- 'dentalpathology';
+		^.ParameterOperand2.ParameterCategory <- 'terminal';
+		^.ParameterOperand2.ParameterValue.DentalPathology.DentalLocation.DentalPiece.DentalQuadrant <- #5.NumberValue / 10;
+		^.ParameterOperand2.ParameterValue.DentalPathology.DentalLocation.DentalPiece.DentalPieceNumber <- #5.NumberValue % 10;
+	}
+)
+
+// DentalTreatment
+
+(DentalTreatment_Rule01:
+ 	[ Parameter -> DentalTreatment ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'dentaltreatment';
+		^.ParameterValue.DentalTreatment <- #1;
+	}
+)
+
+(DentalTreatment_Rule02:
+ 	[ DentalTreatment -> < lexDentalTreatmentType % DentalLocation > ]
+	{
+		^.DentalTreatmentType <- #1;
+		^.DentalLocation <- #2;
+	}
+)
+
+(DentalTreatment_Rule03:
+ 	[ Parameter -> DentalTreatment lexConjAnd < < lexPrepIn | lexPrepOf > lexDetThe? >? Number ]
+	{
+		^.ParameterCategory <- 'conjunction';
+		^.ParameterType <- 'dentaltreatment';
+
+		^.ParameterOperand1.ParameterValue.DentalTreatment <- #1;
+		^.ParameterOperand1.ParameterType <- 'dentaltreatment';
+		^.ParameterOperand1.ParameterCategory <- 'terminal';
+
+		^.ParameterOperand2.ParameterValue.DentalTreatment <- #1;
+		^.ParameterOperand2.ParameterType <- 'dentaltreatment';
+		^.ParameterOperand2.ParameterCategory <- 'terminal';
+		^.ParameterOperand2.ParameterValue.DentalTreatment.DentalLocation.DentalPiece.DentalQuadrant <- #5.NumberValue / 10;
+		^.ParameterOperand2.ParameterValue.DentalTreatment.DentalLocation.DentalPiece.DentalPieceNumber <- #5.NumberValue % 10;
+	}
+)
+
+(DentalTreatment_Rule04:
+ 	[ DentalTreatment -> DentalTreatment lexPrepAl DentalPiece ]
+	{
+		if(#1.DentalTreatmentType == 'puente fijo')
+		{
+			^ <- #1;
+			Erase(^.DentalLocation.DentalPiece);
+			^.DentalLocation.DentalInitialPiece <- #1.DentalLocation.DentalPiece;
+			^.DentalLocation.DentalFinalPiece <- #3;
+		}
+		else
+		{
+			Fail();
+		}
+	}
+)
+
+(DentalTreatment_Rule05:
+ 	[ DentalTreatment -> DentalTreatment lexPrepTo lexDetThe DentalPiece ]
+	{
+		if(#1.DentalTreatmentType == 'puente fijo')
+		{
+			^ <- #1;
+			Erase(^.DentalLocation.DentalPiece);
+			^.DentalLocation.DentalInitialPiece <- #1.DentalLocation.DentalPiece;
+			^.DentalLocation.DentalFinalPiece <- #4;
+		}
+		else
+		{
+			Fail();
+		}
+	}
+)
+
+// Location
+
+(DentalLocation_Rule01:
+ 	[ DentalLocation -> DentalPiece ]
+	{
+		^.DentalPiece <- #1;
+	}
+)
+
+(DentalLocation_Rule02:
+ 	[ DentalLocation -> < lexDentalFace % DentalPiece > ]
+	{
+		BatchInsertEnd(^.DentalFaces, #1);
+		^.DentalPiece <- #2;
+	}
+)
+
+(DentalLocation_Rule03:
+ 	[ DentalLocation -> < lexDentalFace % lexDentalFace % DentalPiece > ]
+	{
+		BatchInsertEnd(^.DentalFaces, #1);
+		BatchInsertEnd(^.DentalFaces, #2);
+		^.DentalPiece <- #3;
+	}
+)
+
+(DentalLocation_Rule04:
+ 	[ DentalLocation -> < lexDentalFace % lexDentalFace % lexDentalFace % DentalPiece > ]
+	{
+		BatchInsertEnd(^.DentalFaces, #1);
+		BatchInsertEnd(^.DentalFaces, #2);
+		BatchInsertEnd(^.DentalFaces, #3);
+		^.DentalPiece <- #4;
+	}
+)
+
+// DentalPiece 
+
+(DentalPiece_Rule01:
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? Number ]
+	{
+		^.DentalQuadrant <- #3.NumberValue / 10;
+		^.DentalPieceNumber <- #3.NumberValue % 10;
+	}
+)
+ 
+(DentalPiece_Rule02:
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < DentalQuadrant % DentalPieceNumber > ]
+	{
+		^.DentalQuadrant <- #3;
+		^.DentalPieceNumber <- #4;
+	}
+)
+
+(DentalPiece_Rule02bis:
+ 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < DentalQuadrant % DentalPieceNumber > ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'dentalpiece';
+		^.ParameterValue.DentalPiece.DentalQuadrant <- #3;
+		^.ParameterValue.DentalPiece.DentalPieceNumber <- #4;
+	}
+)
+
+(DentalPiece_Rule03:
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexPremolar % lexOrdinalValue > % DentalQuadrant > ]
+	{
+		^.DentalQuadrant <- #5;
+		^.DentalPieceNumber <- #4 + 3;
+	}
+)
+
+(DentalPiece_Rule03bis:
+ 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexPremolar % lexOrdinalValue > % DentalQuadrant > ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'dentalpiece';
+		^.ParameterValue.DentalPiece.DentalQuadrant <- #5;
+		^.ParameterValue.DentalPiece.DentalPieceNumber <- #4 + 3;
+	}
+)
+
+(DentalPiece_Rule04:
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexMolar % lexOrdinalValue > % DentalQuadrant > ]
+	{
+		^.DentalQuadrant <- #5;
+		^.DentalPieceNumber <- #4 + 5;
+	}
+)
+
+(DentalPiece_Rule04bis:
+ 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexMolar % lexOrdinalValue > % DentalQuadrant > ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'dentalpiece';
+		^.ParameterValue.DentalPiece.DentalQuadrant <- #5;
+		^.ParameterValue.DentalPiece.DentalPieceNumber <- #4 + 5;
+	}
+)
+
+(DentalPiece_Rule05:
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexPremolar % lexInverseOrdinalValue > % DentalQuadrant > ]
+	{
+		^.DentalQuadrant <- #5;
+		^.DentalPieceNumber <- 6 - #4;
+	}
+)
+
+(DentalPiece_Rule05bis:
+ 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexPremolar % lexInverseOrdinalValue > % DentalQuadrant > ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'dentalpiece';
+		^.ParameterValue.DentalPiece.DentalQuadrant <- #5;
+		^.ParameterValue.DentalPiece.DentalPieceNumber <- 6 - #4;
+	}
+)
+
+(DentalPiece_Rule06:
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexMolar % lexInverseOrdinalValue > % DentalQuadrant > ]
+	{
+		^.DentalQuadrant <- #5;
+		^.DentalPieceNumber <- 9 - #4;
+	}
+)
+
+(DentalPiece_Rule06bis:
+ 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexMolar % lexInverseOrdinalValue > % DentalQuadrant > ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'dentalpiece';
+		^.ParameterValue.DentalPiece.DentalQuadrant <- #5;
+		^.ParameterValue.DentalPiece.DentalPieceNumber <- 9 - #4;
+	}
+)
+

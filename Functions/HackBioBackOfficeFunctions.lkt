@@ -1,0 +1,107 @@
+// ****************************************************************************
+//
+//	Functions for MyApp domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Indices
+// 	DOMAIN  : MyApp
+//	MODULE  : Functions
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MyAppFunctions
+//
+// ****************************************************************************
+
+procedure capturePersonalName()
+{
+	string s <- ShapeToLiteral(GetUserInput(DialogueInteractionCounter()));
+
+	Parameter p;
+	p.ParameterCategory <- 'terminal';
+	p.ParameterType <- 'personalname';
+	p.ParameterValue.PersonalName.PersonalNameValue <- s;
+
+	setParameterCurrentScript('personalname', p);
+}
+
+procedure printParameters()
+{
+	Parameter p;
+
+	p <- getParameterCurrentScript('personalname');
+   	SpyMessage(p);
+	p <- getParameterCurrentScript('datetime');
+    SpyMessage(p);
+	p <- getParameterCurrentScript('phonenumber');
+	SpyMessage(p);
+	p <- getParameterCurrentScript('medicine');
+	SpyMessage(p);
+	p <- getParameterCurrentScript('allergy');
+    SpyMessage(p);
+    p <- getParameterCurrentScript('tobacco');
+    SpyMessage(p);
+}
+
+procedure createReport()
+{
+	Parameter p;
+
+	p <- getParameterCurrentScript('personalname');
+	PropertyTableWriteItem('../Properties/PatientProfile.properties', 'name', ExportCompactJSON(p.ParameterValue.PersonalName));	
+
+	p <- getParameterCurrentScript('datetime');
+	PropertyTableWriteItem('../Properties/PatientProfile.properties', 'birthdate', ExportCompactJSON(p.ParameterValue.DateTime));	
+
+	p <- getParameterCurrentScript('phonenumber');
+	PropertyTableWriteItem('../Properties/PatientProfile.properties', 'phonenumber', ExportCompactJSON(p.ParameterValue.PhoneNumber));	
+
+	p <- getParameterCurrentScript('medicine');
+	PropertyTableWriteItem('../Properties/PatientProfile.properties', 'medicine', ExportCompactJSON(p.ParameterValue.Medicine));	
+
+	p <- getParameterCurrentScript('allergy');
+	PropertyTableWriteItem('../Properties/PatientProfile.properties', 'allergy', ExportCompactJSON(p.ParameterValue.Allergy));	
+
+    p <- getParameterCurrentScript('tobacco');
+	PropertyTableWriteItem('../Properties/PatientProfile.properties', 'tobacco', ExportCompactJSON(p.ParameterValue.Tobacco));	
+}
+
+procedure loadProfile()
+{
+	Parameter p;
+	PatientProfile profile;
+	message m;
+
+	m <- PropertyTableRecoverValue('../Properties/PatientProfile.properties', 'name');
+	profile.PersonalName <- ImportJSON(m);
+
+	m <- PropertyTableRecoverValue('../Properties/PatientProfile.properties', 'birthdate');
+	profile.DateTime <- ImportJSON(m);
+
+	m <- PropertyTableRecoverValue('../Properties/PatientProfile.properties', 'medicine');
+	profile.Medicine <- ImportJSON(m);
+
+	m <- PropertyTableRecoverValue('../Properties/PatientProfile.properties', 'allergy');
+	profile.Allergy <- ImportJSON(m);
+
+	m <- PropertyTableRecoverValue('../Properties/PatientProfile.properties', 'tobacco');
+	profile.Tobacco <- ImportJSON(m);
+
+	m <- PropertyTableRecoverValue('../Properties/PatientProfile.properties', 'phonenumber');
+	profile.PhoneNumber <- ImportJSON(m);
+
+	p.ParameterValue.PatientProfile <- profile;
+	p.ParameterCategory <- 'terminal';
+	p.ParameterType <- 'patientprofile';
+
+	setParameterCurrentScript('patientprofile', p);
+	setInfoState('4', 'grounded');
+}
+
+bool correctMedicine(Parameters parameters)
+{
+	// TODO 
+
+	return True;
+}
+

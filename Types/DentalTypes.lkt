@@ -1,0 +1,180 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+classDef:StructureComplex
+(
+	Odontogram :
+	(
+		DentalPathologies,
+		DentalTreatments,
+		DentalFails
+	)
+)
+
+classDef:StructureBatch
+(
+	DentalPathologies :
+	(
+		DentalPathology
+	)
+)
+
+classDef:StructureBatch
+(
+	DentalTreatments :
+	(
+		DentalTreatment
+	)
+)
+
+classDef:StructureBatch
+(
+	DentalFails :
+	(
+		DentalFail
+	)
+)
+
+classDef:StructureComplex
+(
+	DentalFail:
+	(
+		DentalPathology,
+		DentalTreatment,
+		DentalFailReason
+	)
+)
+
+classDef:ElementRange
+(
+	DentalFailReason :
+	{	
+		'CORRECT',
+		'NO_SUCH_PIECE',
+		'PREVIOUS_ABSENT_PIECE',
+		'PREVIOUS_PRESENT_PIECE',
+		'BRIDGE_INCORRECT'
+	}
+)
+
+classDef:StructureComplex
+(
+	DentalPathology :
+    (
+		DentalPathologyType,
+		DentalLocation
+ 	)
+)
+
+
+classDef:StructureComplex
+(
+	DentalTreatment :
+	(
+		DentalTreatmentType,
+		DentalLocation
+	)
+)
+
+classDef:ElementRange
+(
+	DentalPathologyType :
+	{
+		'caries',
+		'inflamación'
+	}
+)
+
+classDef:ElementRange
+(
+	DentalTreatmentType :
+	{
+		'ausencia',
+		'puente fijo',
+		'empaste'
+	}
+)
+
+classDef:StructureComplex
+(
+	DentalLocation :
+	(
+		DentalPiece,
+		DentalFaces,
+		DentalInitialPiece,
+		DentalFinalPiece
+	)
+)
+
+classDef:StructureComplex
+(
+	DentalPiece :
+	(
+		DentalQuadrant,
+		DentalPieceNumber 
+	)
+)
+
+classDef:ElementInt
+(
+	DentalQuadrant,	DentalPieceNumber 
+)
+
+classDef:StructureBatch
+(
+	DentalFaces :
+	(
+		DentalFace
+	)
+)
+
+classDef:Synonym
+(
+	DentalInitialPiece, DentalFinalPiece = DentalPiece
+)
+
+classDef:ElementRange
+(
+	DentalFace :
+	{
+		'oclusive',
+		'vestibular',
+		'palatine',
+		'lingual',
+		'mesial',
+		'distal',
+		'cuello'
+	}
+)
+
+classDef:Synonym
+(
+	lexDentalPathologyType = DentalPathologyType
+)
+
+classDef:Synonym
+(
+	lexDentalTreatmentType = DentalTreatmentType
+)
+ 
+classDef:Synonym
+(
+	lexDentalFace = DentalFace
+)
+
+classDef:Void
+(
+	lexPremolar, lexMolar
+)

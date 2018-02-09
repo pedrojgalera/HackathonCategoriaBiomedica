@@ -1,0 +1,28 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+(FinishOdontogram_Rule01 :
+	[ TaskDialogueAct -> FinishOdontogram ]
+	{
+		^ <- #1;
+	}
+)
+
+(FinishOdontogram_Rule02 :
+ 	[ FinishOdontogram -> lexFinishOdontogramTerm ]
+	{
+		^.Scope <- 'finishodontogram';
+	}
+)

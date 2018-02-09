@@ -1,0 +1,111 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+classDef:StructureComplex
+(
+    PersonalName :
+    (
+    	PersonalNameValue
+ 	)
+)
+
+classDef:ElementLiteral
+(
+	PersonalNameValue
+)
+
+classDef:StructureComplex
+(
+	Medicine :
+	(
+		ActivePrinciples,
+		CommercialName
+	)
+)
+
+classDef:StructureBatch
+(
+	ActivePrinciples :
+	(
+		ActivePrinciple
+	)
+)
+
+classDef:ElementLiteral
+(
+	ActivePrinciple, CommercialName
+)
+
+classDef:StructureComplex
+(
+	Allergy :
+	(
+		MedicineAllergy,
+		EnvironmentalAllergy,
+		AllergyType
+	)
+)
+
+classDef:Synonym
+(
+	MedicineAllergy = Medicine
+)
+
+classDef:ElementLiteral
+(
+	EnvironmentalAllergy, AllergyType
+)
+
+classDef:StructureComplex
+(
+	Tobacco :
+	(
+		TobaccoQuantity,
+		TobaccoType
+	)
+)
+
+classDef:ElementInt
+(
+	TobaccoQuantity
+)
+
+classDef:ElementRange
+(
+	TobaccoType :
+	{
+		'cigars',
+		'package'
+	}
+)
+
+classDef:StructureComplex
+(
+	PatientProfile :
+	(
+		PersonalName,
+		DateTime,
+		PhoneNumber,
+		Medicine,
+		Allergy,
+		Tobacco
+	)
+)
+
+classDef:Synonym
+(
+	FinishOdontogram = TaskDialogueAct
+)
+

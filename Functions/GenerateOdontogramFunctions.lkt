@@ -1,0 +1,139 @@
+// ****************************************************************************
+//
+//	Functions for MyApp domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Indices
+// 	DOMAIN  : MyApp
+//	MODULE  : Functions
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MyAppFunctions
+//
+// ****************************************************************************
+
+procedure GenerateErrorNoSuchPiece(DentalFail df)
+{
+	GenerateMainAnswer('msg-error-no-such-piece-part1');
+
+	DentalPiece piece;
+	if(Filled(df.DentalPathology))
+	{
+		piece <- df.DentalPathology.DentalLocation.DentalPiece;
+	}
+	else
+	{
+		piece <- df.DentalTreatment.DentalLocation.DentalPiece;
+	}
+	SetMainAnswer(LiteralConcat(ShapeToLiteral(piece.DentalQuadrant), ShapeToLiteral(piece.DentalPieceNumber), ' '));
+
+	GenerateMainAnswer('msg-error-no-such-piece-part2');
+}
+
+procedure GenerateErrorPreviousAbsentPiece(DentalFail df)
+{
+	GenerateMainAnswer('msg-error-absent-piece');
+	DentalPiece piece;
+	if(Filled(df.DentalPathology))
+	{
+		piece <- df.DentalPathology.DentalLocation.DentalPiece;
+	}
+	else
+	{
+		piece <- df.DentalTreatment.DentalLocation.DentalPiece;
+	}
+	SetMainAnswer(dentalPieceToString(piece));
+	SetMainAnswer(".");
+}
+
+procedure GenerateErrorPreviousPresentPiece(DentalFail df)
+{
+	GenerateMainAnswer('msg-error-present-piece-part1');
+
+	DentalPiece piece;
+	if(Filled(df.DentalPathology))
+	{
+		piece <- df.DentalPathology.DentalLocation.DentalPiece;
+	}
+	else
+	{
+		piece <- df.DentalTreatment.DentalLocation.DentalPiece;
+	}
+	SetMainAnswer(LiteralConcat(ShapeToLiteral(piece.DentalQuadrant), ShapeToLiteral(piece.DentalPieceNumber), ' '));
+
+	GenerateMainAnswer('msg-error-present-piece-part2');
+}
+
+procedure GenerateErrorBridgeIncorrect(DentalFail df)
+{
+	GenerateMainAnswer('msg-error-incorrect-bridge');
+}
+
+procedure GenerateEchoPathology(DentalPathology dp)
+{
+	if(dp.DentalPathologyType == 'caries')
+	{
+		GenerateMainAnswer('msg-echo-caries-part1');
+		dentalFacesToString(dp.DentalLocation.DentalFaces);
+		GenerateMainAnswer('msg-echo-caries-part2');		
+		SetMainAnswer(dentalPieceToString(dp.DentalLocation.DentalPiece));
+	}
+	else if(dp.DentalPathologyType == 'inflamación')
+	{
+		GenerateMainAnswer('msg-echo-inflamacion');
+		SetMainAnswer(dentalPieceToString(dp.DentalLocation.DentalPiece));
+	}	
+}
+
+procedure GenerateEchoTreatment(DentalTreatment dt)
+{
+	if(dt.DentalTreatmentType == 'ausencia')
+	{
+		GenerateMainAnswer('msg-echo-ausencia');
+		SetMainAnswer(dentalPieceToString(dt.DentalLocation.DentalPiece));
+	}
+	else if(dt.DentalTreatmentType == 'empaste')
+	{
+		GenerateMainAnswer('msg-echo-empaste-part1');
+		dentalFacesToString(dt.DentalLocation.DentalFaces);
+		GenerateMainAnswer('msg-echo-empaste-part2');		
+		SetMainAnswer(dentalPieceToString(dt.DentalLocation.DentalPiece));	
+	}	
+	else if(dt.DentalTreatmentType == 'puente fijo')
+	{
+		GenerateMainAnswer('msg-echo-puentefijo-part1');
+		SetMainAnswer(dentalPieceToString(dt.DentalLocation.DentalInitialPiece));
+		SetMainAnswer(" ");
+		GenerateMainAnswer('msg-echo-puentefijo-part2');
+		SetMainAnswer(dentalPieceToString(dt.DentalLocation.DentalFinalPiece));
+	}	
+}
+
+procedure dentalFacesToString(DentalFaces dfaces)
+{
+	for(int i <- 1; i <= BatchSize(dfaces); i++)
+	{
+		DentalFace df;
+		BatchRecoverPosition(dfaces, i, df);		
+
+		if(i < BatchSize(dfaces))
+		{
+			GenerateMainAnswer(LiteralConcat('msg-echo-face-o-', ShapeToLiteral(df)));
+		}
+		else
+		{
+			GenerateMainAnswer(LiteralConcat('msg-echo-face-a-', ShapeToLiteral(df)));
+		}
+		SetMainAnswer(" ");
+	}
+}
+
+string dentalPieceToString(DentalPiece dp)
+{
+	return LiteralConcat(ShapeToLiteral(dp.DentalQuadrant), ShapeToLiteral(dp.DentalPieceNumber));
+}
+
+
+
+

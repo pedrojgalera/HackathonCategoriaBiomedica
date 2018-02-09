@@ -1,0 +1,193 @@
+// ****************************************************************************
+//
+//	Scripting for testing purposes: English MyAppEnglish app
+//
+// ****************************************************************************
+//
+//	PROJECT	: MyAppEnglish
+// 	DOMAIN  : -
+//	MODULE  : -
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MyAppEnglish.slk
+//
+// ****************************************************************************
+
+LaunchLektaKernel
+(
+	ExecStrategy = KernelSynchronous
+)
+
+UseProject
+(
+	ProjectCompile : "Deployment/HackBio.olk"
+	TemporalFolder : ".tmp/"
+)
+
+setupRuntimeSpyMessageOn
+// MainAnswer:On
+// DisplayProcessLocutioOn
+ DisplayProcessUnderstandingOn
+// DisplayProcessScriboOn
+// DisplayProcessSensoOn
+// DisplayProcessRespondoOn
+// DisplayProcessCogitoOn
+// DisplayProcessColligoOn
+
+CreateDialogue
+(
+    InstanceOperation:Fluency
+    InstanceLanguage:Spanish
+    InstanceInterface:Written
+)
+
+// Nombre
+Me llamo Jose Luis Pro
+//me llamo Federico Ustinov
+//me llamo Pepito Pérez
+//mi nombre es Luis Valencia
+//Federico Ustinov
+//Pepito Pérez
+//Luis Valencia
+
+// Fecha de nacimiento
+10 de octubre de 1972
+
+// Teléfono
+//mi número de teléfono es 123 12 12 12
+123 12 12 12
+
+// Tratamiento actual
+//Sí
+//Acetilcisteína
+
+Acetilcisteína
+
+//Fluimucil
+
+//No
+
+//Sí, acetilcisteína para un resfriado
+
+// Alergias conocidas
+//No
+
+Sí
+A la lidocaína
+
+//Sí, a la amoxicilina
+
+//Al polvo
+
+// Tabaco
+//No
+
+//Sí, 15 cigarrillos más o menos
+
+5 ó 6 cigarros
+
+//Sí
+//Dos paquetes
+
+
+// DOCTOR SCRIPT
+Sí
+
+//Caries oclusal en el 17
+//Caries oclusal en la 17
+//Caries oclusal de la 17
+//Caries oclusal del 17
+//Caries oclusal en 17
+//Picadura mesio oclusal del 17 
+//Caries mesio ocluso distal del 17 
+//Caries de cuello en 11
+//Caries de cuello en 11 y en 12
+
+//Inflamación en el 17
+//Infección en el incisivo central superior izquierdo
+//Caries mesio ocluso distal en segundo premolar inferior derecho
+//Caries mesial en segundo molar inferior izquierdo
+//Caries mesial en el último cordal inferior izquierdo
+//Caries mesial en último cordal inferior izquierdo
+//Caries mesial de el último cordal inferior izquierdo
+//Caries mesial del último cordal inferior izquierdo
+//Caries mesial del último premolar inferior izquierdo
+
+//Ausencia del dieciocho
+//Ausencia del dieciocho y del 32
+//Obturación oclusal del primer premolar superior derecho
+//Puente fijo del 14 al 17
+
+//Obturación oclusal del 27 y del 28 
+//Inflamación del 17 y ausencia del 18
+
+// ANNOTATING the ODONTOGRAM
+
+// Primer odontograma
+//Inflamación del 56
+//Perdón quería decir el primer molar superior derecho
+//Picadura mesio ocluso distal del segundo molar superior derecho 
+//Falta del 18
+//Empaste oclusivo en 26
+//Puente fijo del 35 al 37
+//Vale, hemos terminado
+
+// Segundo odontograma
+//Ausencia del 17
+//Empaste en el 17
+//Queria decir en la 16
+//Obturación oclusal del 27 y del 28
+//Caries oclusal en el 18
+//Ausencia en el 18
+//Queria decir en la 38
+//Puente fijo del 44 al 36
+//Perdón era un puente fijo del 44 al 46
+//Bien, hemos terminado
+
+// Tercer odontograma
+Obturación oclusal del 29 y del 28
+Quería decir la 27
+Caries mesio ocluso distal del 17 y ausencia del tercer cordal superior derecho
+Puente fijo de la 35 a la 37 y caries de cuello en 41 y 42
+Perfecto, hemos terminado
+
+
+/*
+Ausencia del 18 
+Caries mesio ocluso distal del 17 
+Obturación ocluso distal del 16 
+Ausencia del 12 
+Caries de cuello en 11 y en 12 
+Ausencia de 22 
+Ausencia del 26 
+Obturación oclusal del 27 y del 28 
+Ausencia del 38 
+Puente fijo de 44 a 47 
+Ausencia de 48
+
+// TODO
+Migración distal del 21 
+Caries oclusal en 37 y distal en 36 
+Endodoncia y corona en 24 
+Lingualización y mesiorotación del 3.2 y 3.1. 
+*/
+
+// Tratamiento propuesto
+
+//No
+
+Sí
+Augmentine durante una semana
+
+//Sí, Clamoxy 1 gramo durante 7 días
+
+//Augmentine durante una semana
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,91 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+(ScriboScheme InformOdontogramError: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'error') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'odontogram'
+	}
+	ScriboAction
+	{
+		DentalFail lastError <- getLastOdontogramError();		
+
+		if(lastError.DentalFailReason == 'NO_SUCH_PIECE')
+		{
+			GenerateErrorNoSuchPiece(lastError);
+		}
+		else if(lastError.DentalFailReason == 'PREVIOUS_ABSENT_PIECE')
+		{
+			GenerateErrorPreviousAbsentPiece(lastError);
+		}
+		else if(lastError.DentalFailReason == 'PREVIOUS_PRESENT_PIECE')
+		{
+			GenerateErrorPreviousPresentPiece(lastError);
+		}
+		else if(lastError.DentalFailReason == 'BRIDGE_INCORRECT')
+		{
+			GenerateErrorBridgeIncorrect(lastError);
+		}
+  	}
+)
+
+(ScriboScheme InformOdontogramError: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'echo') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'odontogram'
+	}
+	ScriboAction
+	{
+		CustomData cdata <- getCustomData();
+		DentalFails dfs <- cdata.Odontogram.DentalFails;
+
+		GenerateMainAnswer('msg-echo-part1');
+
+		for(int i <- 1; i <= BatchSize(dfs); i++)
+		{
+			DentalFail df;
+			BatchRecoverPosition(dfs, i, df);
+
+			if(Filled(df.DentalPathology))
+			{
+				GenerateEchoPathology(df.DentalPathology);
+			}
+			else
+			{
+				GenerateEchoTreatment(df.DentalTreatment);
+			}
+			if(i <= BatchSize(dfs) - 2)
+			{
+				SetMainAnswer(", ");
+			}
+			else if(i <= BatchSize(dfs) - 1)
+			{
+				GenerateMainAnswer('msg-conj');
+			}
+			else
+			{
+				SetMainAnswer(".");
+			}
+		}
+		
+  	}
+)
+

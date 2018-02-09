@@ -1,0 +1,40 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+(Medicine_Rule01:
+ 	[ Parameter -> Medicine ]
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'medicine';
+		^.ParameterValue.Medicine <- #1;
+	}
+)
+
+(Medicine_Rule02:
+ 	[ Medicine -> lexMedicine ]
+	{
+		if(!!IsTokenSpelled(1))
+		{
+			^ <- #1;
+		}
+		else
+		{
+			Fail();
+		}
+	}
+)
+
+
+
