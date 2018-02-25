@@ -97,20 +97,6 @@
 (ScriboScheme AskTelephone: [ DialogueAct ]
 	ScriboCapture
 	{
-		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
-        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
-       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'propose') &&
-  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'appointment'
-	}
-	ScriboAction
-	{
-		GenerateMainAnswer('msg-propose-appointment');
-  	}
-)
-
-(ScriboScheme AskTelephone: [ DialogueAct ]
-	ScriboCapture
-	{
 		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
         #OBJLOCUTIO-1.CoreDialogueAct.Function == 'whquestion' &&
        	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'ask') &&
@@ -118,7 +104,7 @@
 	}
 	ScriboAction
 	{
-		GenerateMainAnswer('msg-propose-appointment-again');
+		GenerateMainAnswer('msg-propose-again');
   	}
 )
 
@@ -142,15 +128,16 @@
 		Parameter p1 <- parametersRecoverParameterType ( #OBJLOCUTIO-1.Parameters, 'medicine' );	
 		Parameter p2 <- parametersRecoverParameterType ( #OBJLOCUTIO-2.Parameters, 'patientprofile' );	
 
-		// TODO
-		SpyMessage("AQUI ESTAMOS INCORRECTO");
-		SpyMessage(p1);
-		SpyMessage(p2);
-		SpyMessage("");
+		GenerateMainAnswer('msg-echo-allergy-part1');
+
+		SetMainAnswer(allergicPrincipleActive(p1, p2));
+		SetMainAnswer(" ");
+	
+		GenerateMainAnswer('msg-echo-allergy-part2');
   	}
 )
 
-(ScriboScheme ConfirmPatientName: [ DialogueAct DialogueAct ]
+(ScriboScheme ConfirmPatientName: [ DialogueAct ]
 	ScriboCapture
 	{
 		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
@@ -162,11 +149,33 @@
 	ScriboAction
 	{
 		Parameter p1 <- parametersRecoverParameterType ( #OBJLOCUTIO-1.Parameters, 'medicine' );	
-
-		// TODO
-		SpyMessage("AQUI ESTAMOS CORRECTO");
-		SpyMessage(p1);
-		SpyMessage("");
+		Medicine med <- p1.ParameterValue.Medicine;
+		
+		if(Filled(med.CommercialName))
+		{
+			SetMainAnswer(Capitalize(med.CommercialName));
+		}
+		else
+		{
+			ActivePrinciple ap;
+			BatchRecoverPosition(med.ActivePrinciples ,1, ap);
+			SetMainAnswer(Capitalize(ap));
+		}
+				
+		GenerateMainAnswer('msg-echo-medicine');
   	}
 )
 
+(ScriboScheme OutputContextDataSentinel: [ DialogueAct ]
+	ScriboCapture 
+	{
+		IsRequest && &IsSco('ocd_sentinel')
+	}
+	ScriboAction 
+	{
+		if(Trim(ShapeToLiteral(GetMainAnswer())) == '')
+		{
+			GenerateMainAnswer('msg-nothing-generated');
+		}
+	}
+)

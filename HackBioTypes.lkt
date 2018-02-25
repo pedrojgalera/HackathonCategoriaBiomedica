@@ -39,8 +39,71 @@ classDef:StructureComplex
         StrArrayAppKeys,
         DomainPropFiles,
 
-		Odontogram
+      Odontogram,
+      RejectedDateTimes,
+      ErrorMessage,
+      Papers
+
     )
+)
+
+
+classDef:StructureBatch
+(
+	Papers :
+	(
+		Paper
+	)
+)
+
+classDef:StructureComplex
+(
+	Paper :
+	(
+      PaperKey,
+    	PaperHeader,
+    	PaperMatter1,
+    	PaperMatter2,
+    	PaperMatter5,
+    	PaperMatter7,
+    	PaperMatter8,
+    	PaperMatter9,
+    	PaperMatter10,
+    	PaperMatter12,
+    	PaperMatter14,
+    	PaperScore,
+      PaperSubject
+	)
+)
+
+classDef:ElementLiteral
+(
+
+      PaperKey,
+    	PaperHeader,
+    	PaperMatter1,
+    	PaperMatter2,
+    	PaperMatter5,
+    	PaperMatter7,
+    	PaperMatter8,
+    	PaperMatter9,
+    	PaperMatter10,
+    	PaperMatter12,
+    	PaperMatter14,
+      PaperSubject
+)
+
+classDef:ElementInt
+(
+	PaperScore
+)
+
+classDef:StructureBatch
+(
+	RejectedDateTimes :
+	(
+		DateTime
+	)
 )
 
 classDef:Synonym

@@ -28,8 +28,10 @@
 
 ("empaste", lexDentalTreatmentType, 'empaste')
 ("obturación", lexDentalTreatmentType, 'empaste')
+("obturacion", lexDentalTreatmentType, 'empaste')
 
 ("puente fijo", lexDentalTreatmentType, 'puente fijo')
+("puente", lexDentalTreatmentType, 'puente fijo')
 
 
 // Caras de las piezas dentales
@@ -75,6 +77,9 @@
 ("premolar", lexPremolar)
 ("molar", lexMolar)
 ("cordal", lexMolar)
+
+("pieza", lexTooth)
+("diente", lexTooth)
 
 
 

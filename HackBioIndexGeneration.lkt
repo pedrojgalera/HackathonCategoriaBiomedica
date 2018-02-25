@@ -1,3 +1,5 @@
 #Include "Generation/PatientGeneration.lkt"
 #Include "Generation/DoctorGeneration.lkt"
 #Include "Generation/OdontogramGeneration.lkt"
+#Include "Generation/AppointmentGeneration.lkt"
+#Include "Generation/PapersGeneration.lkt"

@@ -24,6 +24,9 @@ DialogueScript createDialogueScriptDoctor ()
 	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'dentaltreatment' );
 	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'dentalpiece' );
 	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'medicine' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'datetime' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'proposeddatetime' );
+	BatchInsertEnd( script.ScriptTrigger.ParameterTypes , 'negotiatemodifier' );
 
 	// Info
 	ScriptInfoItem scriptInfoItem, emptyScriptInfoItem;
@@ -70,6 +73,24 @@ DialogueScript createDialogueScriptDoctor ()
 	scriptInfoItem <- emptyScriptInfoItem;
 	scriptInfoItem.InfoItemType <- 'parameter';
 	scriptInfoItem.InfoItemParameterType <- 'medicine';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'datetime';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'proposeddatetime';
+	scriptInfoItem.InfoItemState <- 'empty';
+	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
+
+	scriptInfoItem <- emptyScriptInfoItem;
+	scriptInfoItem.InfoItemType <- 'parameter';
+	scriptInfoItem.InfoItemParameterType <- 'negotiatemodifier';
 	scriptInfoItem.InfoItemState <- 'empty';
 	BatchInsertEnd( script.ScriptInfoItems, scriptInfoItem );
 
@@ -220,19 +241,83 @@ DialogueScript createDialogueScriptDoctor ()
 
     	// EDGE - Correct(Medicine)
       	script <- createOutputBranch(script, 1, 'checkMedicine', 'proposeAppointment', 'correct');
-      	script <- addOutputBranchConditionGeneral1Parameter(script, 'checkMedicine', 'proposeAppointment', 'correct', 'correct_medicine', 'medicine');
+      	script <- addOutputBranchConditionGeneral2Parameter(script, 'checkMedicine', 'proposeAppointment', 'correct', 'correct_medicine', 'medicine', 'patientprofile');
 		script <- modifyOutputBranchMessageParameter(script, 'checkMedicine', 'proposeAppointment', 'correct', 'statement', 'inform', 'implicit', 'parameter', 'medicine');
 		
     	// EDGE - Incorrect(Medicine)
       	script <- createOutputBranch(script, 1, 'checkMedicine', 'proposeNextTreatmentAgain', 'incorrect');
-      	script <- addOutputBranchConditionGeneral1Parameter(script, 'checkMedicine', 'proposeNextTreatmentAgain', 'incorrect', 'incorrect_medicine', 'medicine');
+      	script <- addOutputBranchConditionGeneral2Parameter(script, 'checkMedicine', 'proposeNextTreatmentAgain', 'incorrect', 'incorrect_medicine', 'medicine', 'patientprofile');
 		script <- modifyOutputBranchMessageParameter2(script, 'checkMedicine', 'proposeNextTreatmentAgain', 'incorrect', 'statement', 'inform', 'allergy', 'parameter', 'medicine', 'patientprofile');
 
-	// TODO
+	// Script - DATETIME NEGOTIATION
 
 	// NODE - proposeAppointment
 	script <- createBranchNode(script, 1, 'proposeAppointment');
 	script <- modifyBranchNodeMessage(script, 'proposeAppointment', 'statement', 'inform', 'propose', 'appointment');
+
+		// EDGE - Yes
+        script <- createOutputBranch(script, 1, 'proposeAppointment', 'negotiateAppointment', 'yes');
+        script <- addOutputBranchConditionCore(script, 'proposeAppointment', 'negotiateAppointment', 'yes', 'basicanswer', 'agreement');
+        script <- addOutputBranchConditionParameterNotDigested(script, 'proposeAppointment', 'negotiateAppointment', 'yes', 'datetime');
+   		script <- addOutputBranchActionGeneral(script, 'proposeAppointment', 'negotiateAppointment', 'yes', 'clear_datetime');
+
+		// EDGE - Digested(datetime)
+        script <- createOutputBranch(script, 1, 'proposeAppointment', 'negotiateAppointment', 'digested');
+        script <- addOutputBranchConditionParameterDigested(script, 'proposeAppointment', 'negotiateAppointment', 'digested', 'datetime');
+
+        // EDGE - No
+        script <- createOutputBranch(script, 1, 'proposeAppointment', 'end', 'no');
+        script <- addOutputBranchConditionCore(script, 'proposeAppointment', 'end', 'no', 'basicanswer', 'disagreement');
+
+	// NODE - negotiateAppointment
+	script <- createBranchNodeNoWait(script, 1, 'negotiateAppointment');
+	script <- addBranchActionGeneral1Parameter(script, 'negotiateAppointment', 'negotiate_datetime', 'datetime');
+	
+		// EDGE - NotEmpty(proposeddatetime)
+        script <- createOutputBranch(script, 1, 'negotiateAppointment', 'confirmAppointment', 'notemptyproposeddatetime');
+        script <- addOutputBranchConditionParameterNotEmpty(script, 'negotiateAppointment', 'confirmAppointment', 'notemptyproposeddatetime', 'proposeddatetime');
+
+		// EDGE - Empty(proposeddatetime) - Not(InThePast)
+        script <- createOutputBranch(script, 1, 'negotiateAppointment', 'proposeAppointment', 'emptyproposeddatetime');
+        script <- addOutputBranchConditionParameterEmpty(script, 'negotiateAppointment', 'proposeAppointment', 'emptyproposeddatetime', 'proposeddatetime');
+        script <- addOutputBranchConditionGeneral(script, 'negotiateAppointment', 'proposeAppointment', 'emptyproposeddatetime', 'not_negotiating_in_the_past');
+		script <- modifyOutputBranchMessage(script, 'negotiateAppointment', 'proposeAppointment', 'emptyproposeddatetime', 'statement', 'inform', 'nomore', 'appointments');
+
+		// EDGE - Empty(proposeddatetime) - InThePast
+        script <- createOutputBranch(script, 1, 'negotiateAppointment', 'proposeAppointment', 'emptyproposeddatetimepast');
+        script <- addOutputBranchConditionParameterEmpty(script, 'negotiateAppointment', 'proposeAppointment', 'emptyproposeddatetimepast', 'proposeddatetime');
+        script <- addOutputBranchConditionGeneral(script, 'negotiateAppointment', 'proposeAppointment', 'emptyproposeddatetimepast', 'negotiating_in_the_past');
+		script <- modifyOutputBranchMessage(script, 'negotiateAppointment', 'proposeAppointment', 'emptyproposeddatetimepast', 'statement', 'inform', 'past', 'appointments');
+
+	// NODE - confirmAppointment
+	script <- createBranchNode(script, 1, 'confirmAppointment');
+	script <- modifyBranchNodeMessageParameter(script, 'confirmAppointment', 'question', 'propositional', 'confirm', 'appointment', 'proposeddatetime');
+
+		// EDGE - Yes
+        script <- createOutputBranch(script, 1, 'confirmAppointment', 'end', 'yes');
+        script <- addOutputBranchConditionCore(script, 'confirmAppointment', 'end', 'yes', 'basicanswer', 'agreement');
+		script <- modifyOutputBranchMessageParameter(script, 'confirmAppointment', 'end', 'yes', 'statement', 'inform', 'explicit', 'appointment', 'proposeddatetime');
+
+		// EDGE - No
+        script <- createOutputBranch(script, 1, 'confirmAppointment', 'negotiateAppointment', 'no');
+        script <- addOutputBranchConditionCore(script, 'confirmAppointment', 'negotiateAppointment', 'no', 'basicanswer', 'disagreement');
+		script <- addOutputBranchActionGeneral1Parameter(script, 'confirmAppointment', 'negotiateAppointment', 'no', 'add_rejected_datetime', 'proposeddatetime');
+
+		// EDGE - Digested(datetime)
+        script <- createOutputBranch(script, 1, 'confirmAppointment', 'negotiateAppointment', 'digested');
+        script <- addOutputBranchConditionParameterDigested(script, 'confirmAppointment', 'negotiateAppointment', 'digested', 'datetime');
+
+		// EDGE - Digested(negotiatemodifier)
+        script <- createOutputBranch(script, 1, 'confirmAppointment', 'negotiateAppointment', 'negotiate');
+        script <- addOutputBranchConditionParameterDigested(script, 'confirmAppointment', 'negotiateAppointment', 'negotiate', 'negotiatemodifier');
+		script <- addOutputBranchActionGeneral2Parameter(script, 'confirmAppointment', 'negotiateAppointment', 'negotiate', 'add_negotiate_datetime', 'proposeddatetime', 'negotiatemodifier');
+
+	// NODE - end
+	script <- createBranchNode(script, 1, 'end');
+	script <- modifyBranchNodeMessage(script, 'end', 'social', 'goodbye', '', '');
+
+		// EDGE - always
+    	script <- createOutputBranch(script, 1, 'end', 'null', 'always');
 
 	script <- endScript(script,10);
 

@@ -1,0 +1,43 @@
+// ****************************************************************************
+//
+//	Scripting for testing purposes: English MyAppEnglish app
+//
+// ****************************************************************************
+//
+//	PROJECT	: MyAppEnglish
+// 	DOMAIN  : -
+//	MODULE  : -
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MyAppEnglish.slk
+//
+// ****************************************************************************
+
+LaunchLektaKernel
+(
+	ExecStrategy = KernelSynchronous
+)
+
+UseProject
+(
+	ProjectCompile : "Deployment/HackBio.olk"
+	TemporalFolder : ".tmp/"
+)
+
+setupRuntimeSpyMessageOn
+// MainAnswer:On
+// DisplayProcessLocutioOn
+ DisplayProcessUnderstandingOn
+// DisplayProcessScriboOn
+// DisplayProcessSensoOn
+// DisplayProcessRespondoOn
+// DisplayProcessCogitoOn
+// DisplayProcessColligoOn
+
+CreateDialogue
+(
+    InstanceOperation:Fluency
+    InstanceLanguage:English
+    InstanceInterface:Written
+)
+

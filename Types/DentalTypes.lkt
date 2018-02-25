@@ -176,5 +176,5 @@ classDef:Synonym
 
 classDef:Void
 (
-	lexPremolar, lexMolar
+	lexPremolar, lexMolar, lexTooth
 )

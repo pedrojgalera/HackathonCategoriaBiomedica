@@ -54,8 +54,8 @@ Me llamo Jose Luis Pro
 10 de octubre de 1972
 
 // Teléfono
-//mi número de teléfono es 123 12 12 12
-123 12 12 12
+//mi número de teléfono es 615 23 45 67
+615 23 45 67
 
 // Tratamiento actual
 //Sí
@@ -72,10 +72,10 @@ Acetilcisteína
 // Alergias conocidas
 //No
 
-Sí
-A la lidocaína
+//Sí
+//A la lidocaína
 
-//Sí, a la amoxicilina
+Sí, a la amoxicilina
 
 //Al polvo
 
@@ -145,12 +145,11 @@ Sí
 //Bien, hemos terminado
 
 // Tercer odontograma
-Obturación oclusal del 29 y del 28
+Obturación oclusal de la pieza 29 y del diente 28
 Quería decir la 27
 Caries mesio ocluso distal del 17 y ausencia del tercer cordal superior derecho
 Puente fijo de la 35 a la 37 y caries de cuello en 41 y 42
 Perfecto, hemos terminado
-
 
 /*
 Ausencia del 18 
@@ -176,12 +175,70 @@ Lingualización y mesiorotación del 3.2 y 3.1.
 
 //No
 
-Sí
-Augmentine durante una semana
-
-//Sí, Clamoxy 1 gramo durante 7 días
-
+//Sí
 //Augmentine durante una semana
+
+//Sí, Clamoxyl 1 gramo durante 7 días
+
+Augmentine durante una semana
+Cefalosporina
+Azitromicina
+
+// Siguiente cita
+//No
+
+//Sí, y a ver si puede ser el 16 de febrero
+//Me parece bien
+//Adiós
+
+//Sí, y a ver si puede ser el 16 de febrero
+//No
+//No
+//No
+//Sí
+//Perfecto
+//Adiós
+
+//Sí, y a ver si puede ser el 16 de febrero
+//No
+//No
+//No
+//El 16 de febrero
+//El 17 de febrero
+//Ok
+//Adiós
+
+//A ver si puede ser el 18 de febrero
+//Mejor el 20 de febrero
+//No
+//Pues vale
+//Adiós
+
+//Sí, y a ver si puede ser el 27 de febrero
+//¿Podría ser un poco más tarde?
+//Uff demasiado tarde...
+//Ah, perfecto!
+//Adiós
+
+//Mira a ver para la semana que viene
+//¿Para mañana hay hueco?
+//Mejor pasado mañana
+//Bueno mira, cuanto antes
+//Vale, me viene genial
+
+//Sí, el martes por favor
+//Magnífico, correcto
+//Hasta luego
+
+Me gustaría reservar cita para ayer
+Vale, pues para dentro de un par de días
+¿Y para hace dos días?
+Perdón, quería decir para la semana que viene
+Perdona mejor para el 27 de febrero
+Pero eso es demasiado tarde
+De acuerdo
+Adiós
+
 
 
 

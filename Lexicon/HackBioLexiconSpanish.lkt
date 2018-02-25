@@ -23,3 +23,12 @@
 #Include "MedicinesLexicon.lkt"
 #Include "DentalLexicon.lkt"
 #Include "FinishOdontogramLexicon.lkt"
+
+
+// Lexical about offset days
+("ayer",			lexOffsetBaseDateDay, -1)
+("hoy",				lexOffsetBaseDateDay, 0)
+("cuanto antes",	lexOffsetBaseDateDay, 0)
+("mañana",			lexOffsetBaseDateDay, 1)
+("pasado mañana",   lexOffsetBaseDateDay, 2)
+

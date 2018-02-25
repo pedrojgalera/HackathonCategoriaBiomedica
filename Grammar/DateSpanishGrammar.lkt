@@ -1,0 +1,264 @@
+// ****************************************************************************
+//
+//	Grammar for Date part of DateTime parameter
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency
+// 	DOMAIN  : Kernel
+//	MODULE  : DateTime
+//	PACKAGE	: -
+// 	FOLDER  : Grammar
+// 	FILE	: DateEnglishGrammar
+//
+// ****************************************************************************
+
+// 1 de agosto de 2016
+(DateRule07 :
+	[ BaseDate -> Number lexPrepOf lexBaseMonth lexPrepOf? Number? ]
+	{
+		^.Day <- #1.NumberValue;
+		^.Month <- #3;
+        ^.Year <- #5.NumberValue;
+		if(!!isValidBaseDate(^))
+		{
+			Fail();
+		}
+    }
+)
+
+// a week after tomorrow
+// the week after tomorrow
+// one week before tomorrow
+(DateRule16a :
+  	[ OffsetDate ->  < lexDetThe | lexDetUndef >? lexWeekTerm lexDirectionOfTimeModifier ]
+	{
+		^.DirectionOfTime <- #3;
+		^.Date.Week <- 1; 		
+	}
+)
+
+(DateRule10 :
+   	[ DateTime -> lexOffsetBaseDateDay ] 
+	{
+		^.BaseDate <- getCurrentBaseDate();
+		if(#1 < 0)
+		{
+			^.OffsetDate.Date.Day <- -#1;
+			^.OffsetDate.DirectionOfTime <- 'backward';
+		}
+		else if(#1 >= 0)
+		{
+			^.OffsetDate.Date.Day <- #1;
+			^.OffsetDate.DirectionOfTime <- 'forward';	
+		}
+    }
+)
+
+
+// monday
+// on monday
+(DateRule33 :
+    [ DateTime -> < lexPrepOn | lexDetThis >? < lexDayInWeek | lexDayInWeekShort > ] 
+	{
+		if(GetClass(#2) == 'lexDayInWeekShort' && IsTokenSpelled(2))
+		{
+			Fail();
+		}
+		^.BaseDate <- getCurrentBaseDate();
+		^.OffsetDate.DirectionOfTime <- 'forward';    			
+		^.OffsetDate.Date.DayInWeek <- #2;
+		^.OffsetDate.DayInWeekOffset <- 1;
+    }
+)
+
+/*
+(DateRule01 :
+	[ Parameter -> DateTime ] 
+	{
+		^.ParameterCategory <- 'terminal';
+		^.ParameterType <- 'datetime';
+		^.ParameterValue.DateTime <- #1;
+	}
+)
+
+(DateRule02 :
+	[ DateTime -> OffsetDate ] 
+	{
+		^.OffsetDate <- #1;
+	}
+)
+
+(DateRule03 :
+	[ DateTime -> BaseDate ] 
+	{
+		^.BaseDate <- #1;
+	}
+)
+
+// 1 de agosto de 2016
+(DateRule07 :
+	[ BaseDate -> Number lexPrepOf lexBaseMonth lexPrepOf Number? ]
+	{
+		^.Day <- #1.NumberValue;
+		^.Month <- #3;
+        ^.Year <- #5.NumberValue;
+		if(!!isValidBaseDate(^))
+		{
+			Fail();
+		}
+    }
+)
+
+(DateRule02_1_b :
+	[ BaseDate -> lexDetThe? Number lexPrepOf lexBaseMonthShort lexPrepOf? Number? ]
+	{
+		if(!! IsTokenSpelled(4))
+		{
+	        ^.Day <- #2.NumberValue;
+        	^.Month <- #4;
+       		^.Year <- #6.NumberValue;
+		}
+		else
+		{
+			Fail();
+		}
+	}
+)
+
+// en marzo de dos mil veinte
+// en marzo
+// marzo
+(DateRule03_3 :
+	[ BaseDate -> lexPrepIn? lexBaseMonth lexPrepOf? Number?]
+	{
+		^.Month <- #2;
+		^.Year <- #4.NumberValue;
+	}
+)
+
+(DateRule03_3_b :
+	[ BaseDate -> lexPrepIn? lexBaseMonthShort lexPrepOf? Number?]
+	{
+		if(!! IsTokenSpelled(2))
+		{
+			^.Month <- #2;
+			^.Year <- #4.NumberValue;
+		}
+		else
+		{
+			Fail();
+		}
+	}
+)
+
+// dentro de cuatro días
+// en un día
+// hace cinco días
+(DateRule04_2 :
+    	[ DateTime -> lexDirectionOfTimeModifier Number lexDayTerm ]
+	{
+
+		^.BaseDate.Day <- ClockAskDayOfTheMonth();
+		^.BaseDate.Month <- ClockAskMonth();
+		^.BaseDate.Year <- ClockAskYear();
+		^.BaseDate.DayInWeek <- ClockAskDayOfTheWeek();
+		^.OffsetDate.Date.Day <- #2.NumberValue;
+		^.OffsetDate.DirectionOfTime <- #1;
+    	}
+)
+
+// dentro de dos lunes
+// hace tres martes
+(DateRule04_3 :
+    	[ OffsetDate -> lexDirectionOfTimeModifier Number lexDayInWeek ]
+	{
+		^.Date.DayInWeek <- #3;
+		^.DayInWeekOffset <- #2.NumberValue;
+		^.DirectionOfTime <- #1;
+	}
+)
+
+// dentro de dos semanas
+// hace cuatro semanas
+(DateRule04_4 :
+    	[ OffsetDate -> lexDirectionOfTimeModifier Number lexWeekTerm ]
+	{
+		^.Date.Week <- #2.NumberValue;
+		^.DirectionOfTime <- #1;
+	}
+
+)
+
+// dentro de dos meses
+// hace cuatro meses
+(DateRule04_5 :
+    	[ OffsetDate -> lexDirectionOfTimeModifier? Number lexMonthTerm ]
+	{
+		^.Date.Month <- #2.NumberValue;
+		^.DirectionOfTime <- #1;
+	}
+)
+
+
+// en dos años
+// hace un año
+(DateRule04_6 :
+    	[ OffsetDate -> lexDirectionOfTimeModifier? Number lexYearTerm ]
+	{
+		^.Date.Year <- #2.NumberValue;
+		^.DirectionOfTime <- #1;
+	}
+)
+
+
+// lunes
+// el lunes
+// próximo lunes
+// el último lunes
+// el siguiente lunes
+// el anterior lunes
+(DateRule05_2 :
+    	[ OffsetDate -> < lexDirectionOfTimeModifier % lexDayInWeek > ]
+	{
+		if(#1)
+		{
+			^.DirectionOfTime <- #1;
+		}
+		else
+		{
+			^.DirectionOfTime <- 'forward';
+		}
+		^.Date.DayInWeek <- #2;
+		^.DayInWeekOffset <- 1;
+    	}
+)
+
+
+// el siguiente día después del 25 de agosto
+// el anterior día antes del 25 de agosto
+(DateRule10_1 :
+	[ DateTime -> OffsetDate lexDirectionOfTimeModifier BaseDate ]
+	{
+		^.OffsetDate <- #1;
+		^.BaseDate <- #3;
+	}
+)
+
+
+// desde hoy hasta el 25 de agosto
+(DateRule14_ES :
+    	[ DateTime/2 -> DateTime/1 DateTime/1 ]
+	{
+		if((#1.MinDate && #2.MaxDate) || (#1.MaxDate && #2.MinDate))
+		{
+			^ <- #1;
+			^ <| #2;
+		}
+		else
+		{
+			Fail();
+		}
+    }
+)
+*/

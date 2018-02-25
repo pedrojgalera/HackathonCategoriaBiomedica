@@ -18,4 +18,5 @@
 #Include "AllergyGrammar.lkt"
 #Include "TobaccoGrammar.lkt"
 #Include "DentalGrammar.lkt" 
-#Include "FinishOdontogramGrammar.lkt" 
+#Include "FinishOdontogramGrammar.lkt"
+#Include "DateSpanishGrammar.lkt"  

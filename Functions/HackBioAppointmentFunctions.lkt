@@ -1,0 +1,164 @@
+// ****************************************************************************
+//
+//	Functions for MyApp domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Indices
+// 	DOMAIN  : MyApp
+//	MODULE  : Functions
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MyAppFunctions
+//
+// ****************************************************************************
+
+procedure negotiateDateTime(Parameters parameters)
+{
+	// TODO REMOVE
+//	SpyMessage("");
+//	SpyMessage("negotiateDateTime:");
+//	SpyMessage(parameters);
+//	SpyMessage("");
+
+	// TODO LLAMADA
+	BackOfficeReturn bor <- negotiateDateTimeMedicalAppointment(parameters);
+
+	// TODO REMOVE
+//	SpyMessage("bor:");
+//	SpyMessage(bor);
+
+	CustomData cdata <- getCustomData();
+	cdata.ErrorMessage <- bor.ErrorMessage;
+	setCustomData(cdata);
+
+	Parameters filteredParameters;
+	for(int i <- 1; i <= BatchSize(bor.Parameters); i++)
+	{
+		Parameter currentParameter;
+		BatchRecoverPosition(bor.Parameters, i, currentParameter);
+		DateTime dt <- currentParameter.ParameterValue.DateTime;
+
+		if(notRejectedDateTime(dt))
+		{
+			BatchInsertEnd(filteredParameters, currentParameter);
+		}
+	}
+
+	// TODO REMOVE
+//	SpyMessage("filtered:");
+//	SpyMessage(filteredParameters);
+
+	if(BatchSize(filteredParameters) >= 1)
+	{
+		bor.Parameters <- filteredParameters;
+		Parameter parameter;
+		// La tercer
+		BatchRecoverPosition(bor.Parameters, Min(3,BatchSize(filteredParameters)), parameter);
+		parameter.ParameterType <- 'proposeddatetime';
+
+		setParameterCurrentScript('proposeddatetime', parameter);
+		setInfoState('10', 'grounded');
+	}
+	else
+	{
+		setInfoState('10', 'empty');
+	}
+}
+
+bool negotiatingInThePast()
+{
+	CustomData cdata <- getCustomData();
+
+	return (cdata.ErrorMessage == 'negotiating_in_the_past');
+}
+
+procedure clearDateTime()
+{
+	Parameter emptyParameter;
+	setParameterCurrentScript('datetime', emptyParameter);
+	setInfoState('9', 'empty');
+}
+
+procedure addRejectedDateTime(Parameters parameters)
+{
+	Parameter parameter;
+	BatchRecoverPosition(parameters, 1, parameter);
+	DateTime dt <- parameter.ParameterValue.DateTime;
+	Erase(dt.GeneralTime.MinTime);
+	Erase(dt.GeneralTime.MaxTime);
+
+	CustomData cdata <- getCustomData();
+	BatchInsertEnd(cdata.RejectedDateTimes, dt);
+	setCustomData(cdata);
+}
+
+procedure addNegotiateDateTime(Parameters parameters)
+{
+	Parameter parameter;
+	BatchRecoverPosition(parameters, 1, parameter);
+	DateTime dt <- parameter.ParameterValue.DateTime;
+	Erase(dt.GeneralTime.MinTime);
+	Erase(dt.GeneralTime.MaxTime);
+
+	BatchRecoverPosition(parameters, 2, parameter);
+	NegotiateModifier mod <- parameter.ParameterValue.DateTime.GeneralTime.NegotiateModifier;
+	if(mod == 'later')
+	{
+		dt.GeneralTime.MinTime.BaseTime <- dt.GeneralTime.BaseTime;
+		Erase(dt.GeneralTime.BaseTime);
+	}
+	else
+	{
+		dt.GeneralTime.MaxTime.BaseTime <- dt.GeneralTime.BaseTime;
+		Erase(dt.GeneralTime.BaseTime);
+	}
+
+	CustomData cdata <- getCustomData();
+	BatchInsertEnd(cdata.RejectedDateTimes, dt);
+	setCustomData(cdata);
+}
+
+bool notRejectedDateTime(DateTime dt)
+{
+	CustomData cdata <- getCustomData();
+
+	bool ret <- True;
+	for(int i <- 1; i<= BatchSize(cdata.RejectedDateTimes); i++)	
+	{
+		DateTime currentDt;
+		BatchRecoverPosition(cdata.RejectedDateTimes, i, currentDt);
+
+		if(isIncludedDateTime(currentDt, dt))
+		{
+			ret <- False;
+		}
+	}
+
+	return ret;
+}
+
+bool isIncludedDateTime(DateTime rejected, DateTime current)
+{
+	bool ret <- False;
+
+	if(rejected.GeneralTime.BaseTime.Hour == current.GeneralTime.BaseTime.Hour)
+	{
+		ret <- True;
+	}
+	else if(Filled(rejected.GeneralTime.MinTime) && rejected.GeneralTime.MinTime.BaseTime.Hour >= current.GeneralTime.BaseTime.Hour)
+	{
+		ret <- True;
+	}
+	else if(Filled(rejected.GeneralTime.MaxTime) && rejected.GeneralTime.MaxTime.BaseTime.Hour <= current.GeneralTime.BaseTime.Hour)
+	{
+		ret <- True;
+	}
+	
+	return ret;
+}
+
+
+
+
+

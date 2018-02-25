@@ -1,0 +1,23 @@
+["id", "title", "description", "urlmetadata", "urltext", "urltextxml", "content", "source", "keyword", "publisher", "type", "language", "date"]
+
+{
+    "id": "KEY",
+    "title": "HEADER",
+    "content": "SUBJECT",
+    "keyword": "MATTER1",
+    "publisher": "MATTER2",
+    "locs": "MATTER3",
+    "orgs": "MATTER4",
+    "date": "MATTER5",
+    "pers": "MATTER6",
+    "source": "MATTER7",
+    "urlmetadata": "MATTER8",
+    "urltext": "MATTER9",
+    "urltextxml": "MATTER10",
+    "set": "MATTER11",
+    "type": "MATTER12",
+    "language": "MATTER13",
+    "description": "MATTER14"
+}
+
+

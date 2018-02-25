@@ -24,7 +24,10 @@
 	ScriboAction
 	{
 		GenerateMainAnswer('msg-welcome');
-  	}
+		if (GetDialogueInterId()=='Written'){
+		  SetMainAnswerString(getBackgroundImage());
+		}
+  }
 )
 
 (ScriboScheme AskName: [ DialogueAct ]

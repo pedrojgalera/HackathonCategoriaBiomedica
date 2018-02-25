@@ -1,0 +1,170 @@
+// ****************************************************************************
+//
+//	Back Office functions simulation in Medical Appointment domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency
+// 	DOMAIN  : MedicalAppointments
+//	MODULE  : Functions
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MedicalAppointmentBackOfficeSimulation
+//
+// ****************************************************************************
+
+// A little explanation about simulating appointment availability
+// Date: (DayInMonth,DayInWeek) = (5 bits, 3 bits) = 8 bits in total if DayInWeek is even
+// Date: (DayInWeek,DayInMonth) = (3 bits, 5 bits) = 8 bits in total if DayInWeek is odd
+// Times available in one day: 9,10,11,12,16,17,18,19 = 8 in total
+
+// No appointment slots on sunday nor saturday afternoon
+
+// Constants for datetime availability simulation
+
+// Maximum number of days after current day to get an appointment
+#Define MAX_DAYS_AFTER 90
+// Hour of the day used to have the minimum date for tomorrow
+#Define MAX_HOUR_FOR_TODAY 23
+// Length of the appointment in minutes
+#Define APPOINTMENT_LENGTH 60
+
+DateTimes getMedicalAppointmentAvailability(DateTime proposed)
+{
+	// If it has only MinDate we add MaxDate
+	if(proposed.MinDate && !! proposed.MaxDate)
+	{
+		proposed.MaxDate.BaseDate <- getCurrentBaseDate();
+		for(int i <- 0; i < MAX_DAYS_AFTER; i++)
+		{
+			proposed.MaxDate.BaseDate <- addDay(proposed.MaxDate.BaseDate);
+		}
+	}
+
+	// If it has only MaxDate we add MinDate
+	if(!! proposed.MinDate && proposed.MaxDate)
+	{
+		proposed.MinDate.BaseDate <- getCurrentBaseDate();
+	}
+
+	DateTimes ret;
+	DateTime current, max;	
+	current.BaseDate <- proposed.MinDate.BaseDate;
+	max.BaseDate <- proposed.MaxDate.BaseDate;
+	
+	while(differenceDateTime(max, current) >= 0)
+	{
+		ret <- BatchJoin(ret, getAvailabilityByDayFiltered(current.BaseDate, proposed.GeneralTime));
+		current.BaseDate <- addDay(current.BaseDate);
+	}	
+
+	return ret;
+}
+
+DateTimes getAvailabilityByDayFiltered(BaseDate current, GeneralTime timeFilter)
+{
+	DateTimes ret;
+	DateTimes notFiltered <- getAvailabilityByDay(current);
+	
+	DateTime datetime;
+	int size <- BatchSize(notFiltered);
+	for(int position <- 1; position <= size; position++)
+	{
+		BatchRecoverPosition(notFiltered, position, datetime);	
+
+		if(passedTheFilter(timeFilter, datetime))
+		{
+			BatchInsertEnd(ret, datetime);
+		}
+	}
+
+	return ret;
+}
+
+bool passedTheFilter(GeneralTime filter, DateTime time)
+{
+	// Sunday
+	if(time.BaseDate.DayInWeek == 0)
+	{
+		return False;
+	}
+	// Saturday afternoon
+	if(time.BaseDate.DayInWeek == 6 && time.GeneralTime.BaseTime.Hour >= FIRST_EARLY_AFTERNOON_HOUR)
+	{
+		return False;
+	}
+	// BaseTime
+	if( Filled(filter.BaseTime.Hour) && filter.BaseTime.Hour != time.GeneralTime.BaseTime.Hour )
+	{
+		return False;
+	}
+	// MinTime
+	if( Filled(filter.MinTime) && timeGreater(filter.MinTime.BaseTime, time.GeneralTime.BaseTime) )
+	{
+		return False;
+	}
+	// MaxTime
+	if( Filled(filter.MaxTime) && timeGreater(time.GeneralTime.BaseTime, filter.MaxTime.BaseTime) )
+	{
+		return False;
+	}
+	// Current base time
+	BaseTime current;
+	current.Hour <- ClockAskHour();
+	current.Minute <- ClockAskMinute();
+	if( equalsBaseDate(time.BaseDate, getCurrentBaseDate()) && timeGreater(current, time.GeneralTime.BaseTime) )
+	{
+		return False;
+	}
+	DateTime currentDate;
+	currentDate.BaseDate <- getCurrentBaseDate();
+	if( greaterDateTime(currentDate, time) )
+	{
+		return False;
+	}
+			
+	return True;
+}
+
+DateTimes getAvailabilityByDay(BaseDate current)
+{
+	DateTimes ret;
+	int bits;
+
+	if( Modulo(current.DayInWeek, 2) == 0 )
+	{
+		bits = current.DayInWeek + 8 * current.Day;
+	}
+	else
+	{
+		bits = current.Day + 32 * current.DayInWeek;
+	}
+	
+	int currentHour <- FIRST_EARLY_MORNING_HOUR;
+	DateTime newSlot;
+	newSlot.BaseDate <- current;
+	while(bits != 0)
+	{
+		if(Modulo(bits, 2) == 1)
+		{
+			newSlot.GeneralTime.BaseTime.Hour <- currentHour;
+			newSlot.GeneralTime.BaseTime.Minute <- 0;
+			newSlot.GeneralTime.MinTime.BaseTime.Hour <- currentHour;
+			newSlot.GeneralTime.MinTime.BaseTime.Minute <- 0;
+			newSlot.GeneralTime.MaxTime.BaseTime.Hour <- currentHour;
+			newSlot.GeneralTime.MaxTime.BaseTime.Minute <- 0;
+
+			BatchInsertEnd(ret, newSlot);
+		}
+		currentHour++;
+		if(currentHour == LAST_LATE_MORNING_HOUR + 1)
+		{
+			currentHour <- FIRST_EARLY_AFTERNOON_HOUR;
+		}
+		bits <- bits / 2;
+	}
+
+	return ret;
+}
+
+

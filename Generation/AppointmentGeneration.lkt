@@ -1,0 +1,106 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+(ScriboScheme ProposeAppointment: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'propose') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'appointment'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswerWithRephrasing('msg-propose-appointment', 2, #OBJLOCUTIO-1);
+  	}
+)
+
+(ScriboScheme ConfirmAppointment: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'question' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'propositional' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'confirm') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'appointment'
+		&& parametersContainsParameterType ( #OBJLOCUTIO-1.Parameters, 'proposeddatetime' )
+	}
+	ScriboAction
+	{
+		CustomData cdata <- getCustomData();
+		if(cdata.ErrorMessage == 'approximate')
+		{	
+			GenerateMainAnswer('msg-nomore-appointments');
+			GenerateMainAnswer('msg-more-appointments');
+		}
+
+		Parameter parameter <- parametersRecoverParameterType ( #OBJLOCUTIO-1.Parameters, 'proposeddatetime' );	
+
+		DateTime dt <- parameter.ParameterValue.DateTime;
+		GenerateMainAnswerWithRephrasing('msg-confirm-appointment-part1', 2, #OBJLOCUTIO-1);
+		SetMainAnswer(dateTimeToString(dt));
+		GenerateMainAnswerWithRephrasing('msg-confirm-appointment-part2', 2, #OBJLOCUTIO-1);
+  	}
+)
+
+(ScriboScheme ExplicitAppointment: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'explicit') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'appointment'
+		&& parametersContainsParameterType ( #OBJLOCUTIO-1.Parameters, 'proposeddatetime' )
+	}
+	ScriboAction
+	{
+		Parameter parameter <- parametersRecoverParameterType ( #OBJLOCUTIO-1.Parameters, 'proposeddatetime' );	
+		DateTime dt <- parameter.ParameterValue.DateTime;
+		GenerateMainAnswer('msg-confirmed-appointment-part1');
+		SetMainAnswer(dateTimeToString(dt));
+		GenerateMainAnswer('msg-confirmed-appointment-part2');
+  	}
+)
+
+(ScriboScheme ExplicitAppointment: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'nomore') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'appointments'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-nomore-appointments');
+  	}
+)
+
+(ScriboScheme ExplicitAppointment: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+       	containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'past') &&
+  		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'appointments'
+	}
+	ScriboAction
+	{
+		GenerateMainAnswer('msg-past-appointments');
+  	}
+)
+
+
+
+

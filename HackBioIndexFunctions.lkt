@@ -18,6 +18,10 @@
 	#Include "Functions/HackBioBackOfficeFunctions.lkt"
 	#Include "Functions/OdontogramFunctions.lkt"
 	#Include "Functions/GenerateOdontogramFunctions.lkt"
+	#Include "Functions/MedicalAppointmentBackOfficeSimulation.lkt"
+	#Include "Functions/MedicalAppointmentBackOffice.lkt"
+	#Include "Functions/HackBioAppointmentFunctions.lkt"
+
 
 
 

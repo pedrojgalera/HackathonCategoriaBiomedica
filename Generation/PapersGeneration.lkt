@@ -1,0 +1,51 @@
+// ****************************************************************************
+//
+//	MyApp English welcome
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency/Apps
+// 	DOMAIN  : MyApp
+//	MODULE  : Generation
+//	PACKAGE	: Generic
+// 	FOLDER  : -
+// 	FILE	: MyAppWelcome
+//
+// ****************************************************************************
+
+
+(ScriboScheme GeneratePapers: [ DialogueAct ]
+	ScriboCapture
+	{
+		#OBJLOCUTIO-1.CoreDialogueAct.Dimension == 'statement' &&
+        #OBJLOCUTIO-1.CoreDialogueAct.Function == 'inform' &&
+		containsActionDomainRoot( #OBJLOCUTIO-1.TaskDialogueAct.Action, 'hack') &&
+		#OBJLOCUTIO-1.TaskDialogueAct.Scope == 'papers'
+	}
+	ScriboAction
+	{
+		CustomData cdata <- getCustomData();
+    string ret <- '';
+
+		if(Filled(cdata.Papers))
+		{
+		  ret <- LiteralConcat(ret,'( puede consultar información relacionada en <a href="');
+			//for(int i <- 1; i <= BatchSize(cdata.Papers); i++)
+			//{
+				//Paper paper;
+				//BatchRecoverPosition(cdata.Papers,i, paper);
+				//BatchRecoverPosition(cdata.Papers,i, paper);
+
+				//ret <- LiteralConcat(ret, paper.PaperHeader, ' ');
+			//}
+			Paper paper;
+			BatchRecoverPosition(cdata.Papers,1, paper);
+			ret <- LiteralConcat(ret, paper.PaperMatter9);
+		  ret <- LiteralConcat(ret, '" target="_blank">este art&iacute;culo (');
+			ret <- LiteralConcat(ret, paper.PaperHeader);
+		  ret <- LiteralConcat(ret, ')</a>)');
+		}
+
+		SetMainAnswer(ret);
+	}
+)

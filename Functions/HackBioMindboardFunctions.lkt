@@ -18,3 +18,86 @@ procedure setCustomData(CustomData cdata)
 	$MINDBOARD@CustomData <- cdata;
 }
 
+
+procedure getConceptualScheme(string keyword)
+{
+
+	if(GetDialogueInterId() == 'Written')
+	{
+		int foundItems;
+		int maxItems;
+		string key, header, subject, matter1, matter2, matter5, matter7, matter8, matter9, matter10, matter12, matter14;
+		int score;
+		int item;
+
+
+		string search <- keyword;//LiteralConcat(city, ' ', category);
+
+		ConceptualSchemeSetIndexingArea('HackbioSciELO', 3,'Keywords');
+		ConceptualSchemeExploreString('HackbioSciELO', 3, search);
+
+		foundItems <- ConceptualSchemeGetUnifiedFoundItems('HackbioSciELO', 3);
+
+    int limit <- 1; //2, or whatever
+		maxItems <- Min(limit,foundItems);
+
+		CustomData cdata <- getCustomData();
+		Erase(cdata.Papers);
+		for (item <- 1; item <= maxItems; item ++)
+		{
+
+			key <- ConceptualSchemeAccessUnifiedKey('HackbioSciELO', 3, item);
+			score <- ConceptualSchemeAccessUnifiedScore('HackbioSciELO', 3, item);
+
+			header <- ConceptualSchemeAccessUnifiedHeader('HackbioSciELO', 3, item);
+			subject <- ConceptualSchemeAccessUnifiedSubject('HackbioSciELO', 3, item);
+			matter1 <- ConceptualSchemeAccessUnifiedMatter1('HackbioSciELO', 3, item);
+			matter2 <- ConceptualSchemeAccessUnifiedMatter2('HackbioSciELO', 3, item);
+			matter5 <- ConceptualSchemeAccessUnifiedMatter5('HackbioSciELO', 3, item);
+			matter7 <- ConceptualSchemeAccessUnifiedMatter7('HackbioSciELO', 3, item);
+			matter8 <- ConceptualSchemeAccessUnifiedMatter8('HackbioSciELO', 3, item);
+			matter9 <- ConceptualSchemeAccessUnifiedMatter9('HackbioSciELO', 3, item);
+			matter10 <- ConceptualSchemeAccessUnifiedMatter10('HackbioSciELO', 3, item);
+			matter12 <- ConceptualSchemeAccessUnifiedMatter12('HackbioSciELO', 3, item);
+			matter14 <- ConceptualSchemeAccessUnifiedMatter14('HackbioSciELO', 3, item);
+
+
+			Paper paper;
+			paper.PaperKey <- key;
+			paper.PaperScore <- score;
+
+			paper.PaperHeader <- header;
+			paper.PaperMatter1 <- matter1;
+			paper.PaperMatter2 <- matter2;
+			paper.PaperMatter5 <- matter5;
+			paper.PaperMatter7 <- matter7;
+			paper.PaperMatter8 <- matter8;
+			paper.PaperMatter9 <- matter9;
+			paper.PaperMatter10 <- matter10;
+			paper.PaperMatter12 <- matter12;
+			paper.PaperMatter14 <- matter14;
+      paper.PaperSubject <- subject;
+
+      BatchInsertEnd(cdata.Papers, paper);
+		}
+
+		setCustomData(cdata);
+
+		DialogueAct dialogueAct;
+
+    dialogueAct.CoreDialogueAct.Dimension <- 'statement';
+    dialogueAct.CoreDialogueAct.Function <- 'inform';
+    ActionDomain actionDomain;
+    actionDomain.ActionRoot <- 'hack';
+    BatchInsertEnd( dialogueAct.TaskDialogueAct.Action, actionDomain);
+    dialogueAct.TaskDialogueAct.Scope <- 'papers';
+    SpyMessage("------");
+    SpyMessage("Papers: ");
+    SpyMessage("------");
+    SpyMessage(cdata.Papers);
+    SpyMessage("------");
+
+    BatchInsertEnd( $MINDBOARD@DialogueOutput.DialogueActs, dialogueAct );
+	}
+
+}

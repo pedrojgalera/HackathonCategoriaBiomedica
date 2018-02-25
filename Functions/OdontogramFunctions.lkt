@@ -38,6 +38,7 @@ procedure annotateOdontogram(Parameters parameters)
 			}
 		}		
 	}
+  getConceptualScheme('salud dental');
 }
 
 procedure clearDentalFails()

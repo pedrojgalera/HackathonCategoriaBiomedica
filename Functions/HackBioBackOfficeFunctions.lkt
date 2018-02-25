@@ -100,8 +100,57 @@ procedure loadProfile()
 
 bool correctMedicine(Parameters parameters)
 {
-	// TODO 
+	Parameter p1, p2;
+	BatchRecoverPosition(parameters, 1, p1);
+	BatchRecoverPosition(parameters, 2, p2);
 
-	return True;
+	ActivePrinciples allergies <- p2.ParameterValue.PatientProfile.Allergy.MedicineAllergy.ActivePrinciples;
+	ActivePrinciples treatments <- p1.ParameterValue.Medicine.ActivePrinciples;
+
+	bool ret <- True;
+	for(int i <- 1; i <= BatchSize(treatments); i++)
+	{
+		ActivePrinciple treatment;
+		BatchRecoverPosition(treatments, i, treatment);
+
+		for(int j <- 1; j <= BatchSize(allergies); j++)
+		{
+			ActivePrinciple allergy;
+			BatchRecoverPosition(allergies, j, allergy);
+
+			if(allergy == treatment)
+			{
+				ret <- False;
+			}
+		}
+	}
+
+	return ret;
+}
+
+ActivePrinciple allergicPrincipleActive(Parameter p1, Parameter p2)
+{
+	ActivePrinciples allergies <- p2.ParameterValue.PatientProfile.Allergy.MedicineAllergy.ActivePrinciples;
+	ActivePrinciples treatments <- p1.ParameterValue.Medicine.ActivePrinciples;
+
+	ActivePrinciple allergy;
+	for(int i <- 1; i <= BatchSize(treatments); i++)
+	{
+		ActivePrinciple treatment;
+		BatchRecoverPosition(treatments, i, treatment);
+
+		for(int j <- 1; j <= BatchSize(allergies); j++)
+		{
+			BatchRecoverPosition(allergies, j, allergy);
+
+			if(allergy == treatment)
+			{
+				j <- BatchSize(allergies);
+				i <- BatchSize(treatments);
+			}
+		}
+	}
+
+	return allergy;
 }
 

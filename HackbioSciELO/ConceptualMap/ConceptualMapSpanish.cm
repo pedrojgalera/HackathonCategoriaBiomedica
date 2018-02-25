@@ -1,0 +1,20 @@
+//////////////////////////////////////////////////
+////
+////	Particulas
+////
+//////////////////////////////////////////////////
+
+conceptualEntry { 
+	conceptHead: [Museo]
+	conceptModel: [
+		"museo",
+		"museos",
+		"exposición",
+		"exposiciones",
+		"muestra",
+		"muestras",
+		"Museum"
+	]
+}
+
+

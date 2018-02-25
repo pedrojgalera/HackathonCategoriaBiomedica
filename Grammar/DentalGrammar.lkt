@@ -33,7 +33,7 @@
 )
 
 (DentalPathology_Rule03:
- 	[ Parameter -> DentalPathology lexConjAnd < < lexPrepIn | lexPrepOf > lexDetThe? >? Number ]
+ 	[ Parameter -> DentalPathology lexConjAnd < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? Number ]
 	{
 		^.ParameterCategory <- 'conjunction';
 		^.ParameterType <- 'dentalpathology';
@@ -45,8 +45,8 @@
 		^.ParameterOperand2.ParameterValue.DentalPathology <- #1;
 		^.ParameterOperand2.ParameterType <- 'dentalpathology';
 		^.ParameterOperand2.ParameterCategory <- 'terminal';
-		^.ParameterOperand2.ParameterValue.DentalPathology.DentalLocation.DentalPiece.DentalQuadrant <- #5.NumberValue / 10;
-		^.ParameterOperand2.ParameterValue.DentalPathology.DentalLocation.DentalPiece.DentalPieceNumber <- #5.NumberValue % 10;
+		^.ParameterOperand2.ParameterValue.DentalPathology.DentalLocation.DentalPiece.DentalQuadrant <- #6.NumberValue / 10;
+		^.ParameterOperand2.ParameterValue.DentalPathology.DentalLocation.DentalPiece.DentalPieceNumber <- #6.NumberValue % 10;
 	}
 )
 
@@ -70,7 +70,7 @@
 )
 
 (DentalTreatment_Rule03:
- 	[ Parameter -> DentalTreatment lexConjAnd < < lexPrepIn | lexPrepOf > lexDetThe? >? Number ]
+ 	[ Parameter -> DentalTreatment lexConjAnd < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? Number ]
 	{
 		^.ParameterCategory <- 'conjunction';
 		^.ParameterType <- 'dentaltreatment';
@@ -82,8 +82,8 @@
 		^.ParameterOperand2.ParameterValue.DentalTreatment <- #1;
 		^.ParameterOperand2.ParameterType <- 'dentaltreatment';
 		^.ParameterOperand2.ParameterCategory <- 'terminal';
-		^.ParameterOperand2.ParameterValue.DentalTreatment.DentalLocation.DentalPiece.DentalQuadrant <- #5.NumberValue / 10;
-		^.ParameterOperand2.ParameterValue.DentalTreatment.DentalLocation.DentalPiece.DentalPieceNumber <- #5.NumberValue % 10;
+		^.ParameterOperand2.ParameterValue.DentalTreatment.DentalLocation.DentalPiece.DentalQuadrant <- #6.NumberValue / 10;
+		^.ParameterOperand2.ParameterValue.DentalTreatment.DentalLocation.DentalPiece.DentalPieceNumber <- #6.NumberValue % 10;
 	}
 )
 
@@ -160,100 +160,100 @@
 // DentalPiece 
 
 (DentalPiece_Rule01:
- 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? Number ]
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? Number ]
 	{
-		^.DentalQuadrant <- #3.NumberValue / 10;
-		^.DentalPieceNumber <- #3.NumberValue % 10;
+		^.DentalQuadrant <- #4.NumberValue / 10;
+		^.DentalPieceNumber <- #4.NumberValue % 10;
 	}
 )
  
 (DentalPiece_Rule02:
- 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < DentalQuadrant % DentalPieceNumber > ]
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? < DentalQuadrant % DentalPieceNumber > ]
 	{
-		^.DentalQuadrant <- #3;
-		^.DentalPieceNumber <- #4;
+		^.DentalQuadrant <- #4;
+		^.DentalPieceNumber <- #5;
 	}
 )
 
 (DentalPiece_Rule02bis:
- 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < DentalQuadrant % DentalPieceNumber > ]
+ 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? < DentalQuadrant % DentalPieceNumber > ]
 	{
 		^.ParameterCategory <- 'terminal';
 		^.ParameterType <- 'dentalpiece';
-		^.ParameterValue.DentalPiece.DentalQuadrant <- #3;
-		^.ParameterValue.DentalPiece.DentalPieceNumber <- #4;
+		^.ParameterValue.DentalPiece.DentalQuadrant <- #4;
+		^.ParameterValue.DentalPiece.DentalPieceNumber <- #5;
 	}
 )
 
 (DentalPiece_Rule03:
- 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexPremolar % lexOrdinalValue > % DentalQuadrant > ]
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? < < lexPremolar % lexOrdinalValue > % DentalQuadrant > ]
 	{
-		^.DentalQuadrant <- #5;
-		^.DentalPieceNumber <- #4 + 3;
+		^.DentalQuadrant <- #6;
+		^.DentalPieceNumber <- #5 + 3;
 	}
 )
 
 (DentalPiece_Rule03bis:
- 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexPremolar % lexOrdinalValue > % DentalQuadrant > ]
+ 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? < < lexPremolar % lexOrdinalValue > % DentalQuadrant > ]
 	{
 		^.ParameterCategory <- 'terminal';
 		^.ParameterType <- 'dentalpiece';
-		^.ParameterValue.DentalPiece.DentalQuadrant <- #5;
-		^.ParameterValue.DentalPiece.DentalPieceNumber <- #4 + 3;
+		^.ParameterValue.DentalPiece.DentalQuadrant <- #6;
+		^.ParameterValue.DentalPiece.DentalPieceNumber <- #5 + 3;
 	}
 )
 
 (DentalPiece_Rule04:
- 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexMolar % lexOrdinalValue > % DentalQuadrant > ]
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? < < lexMolar % lexOrdinalValue > % DentalQuadrant > ]
 	{
-		^.DentalQuadrant <- #5;
-		^.DentalPieceNumber <- #4 + 5;
+		^.DentalQuadrant <- #6;
+		^.DentalPieceNumber <- #5 + 5;
 	}
 )
 
 (DentalPiece_Rule04bis:
- 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexMolar % lexOrdinalValue > % DentalQuadrant > ]
+ 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? < < lexMolar % lexOrdinalValue > % DentalQuadrant > ]
 	{
 		^.ParameterCategory <- 'terminal';
 		^.ParameterType <- 'dentalpiece';
-		^.ParameterValue.DentalPiece.DentalQuadrant <- #5;
-		^.ParameterValue.DentalPiece.DentalPieceNumber <- #4 + 5;
+		^.ParameterValue.DentalPiece.DentalQuadrant <- #6;
+		^.ParameterValue.DentalPiece.DentalPieceNumber <- #5 + 5;
 	}
 )
 
 (DentalPiece_Rule05:
- 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexPremolar % lexInverseOrdinalValue > % DentalQuadrant > ]
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? < < lexPremolar % lexInverseOrdinalValue > % DentalQuadrant > ]
 	{
-		^.DentalQuadrant <- #5;
-		^.DentalPieceNumber <- 6 - #4;
+		^.DentalQuadrant <- #6;
+		^.DentalPieceNumber <- 6 - #5;
 	}
 )
 
 (DentalPiece_Rule05bis:
- 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexPremolar % lexInverseOrdinalValue > % DentalQuadrant > ]
+ 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? < < lexPremolar % lexInverseOrdinalValue > % DentalQuadrant > ]
 	{
 		^.ParameterCategory <- 'terminal';
 		^.ParameterType <- 'dentalpiece';
-		^.ParameterValue.DentalPiece.DentalQuadrant <- #5;
-		^.ParameterValue.DentalPiece.DentalPieceNumber <- 6 - #4;
+		^.ParameterValue.DentalPiece.DentalQuadrant <- #6;
+		^.ParameterValue.DentalPiece.DentalPieceNumber <- 6 - #5;
 	}
 )
 
 (DentalPiece_Rule06:
- 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexMolar % lexInverseOrdinalValue > % DentalQuadrant > ]
+ 	[ DentalPiece -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? < < lexMolar % lexInverseOrdinalValue > % DentalQuadrant > ]
 	{
-		^.DentalQuadrant <- #5;
-		^.DentalPieceNumber <- 9 - #4;
+		^.DentalQuadrant <- #6;
+		^.DentalPieceNumber <- 9 - #5;
 	}
 )
 
 (DentalPiece_Rule06bis:
- 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? >? < < lexMolar % lexInverseOrdinalValue > % DentalQuadrant > ]
+ 	[ Parameter -> < < lexPrepIn | lexPrepOf > lexDetThe? lexTooth? >? < < lexMolar % lexInverseOrdinalValue > % DentalQuadrant > ]
 	{
 		^.ParameterCategory <- 'terminal';
 		^.ParameterType <- 'dentalpiece';
-		^.ParameterValue.DentalPiece.DentalQuadrant <- #5;
-		^.ParameterValue.DentalPiece.DentalPieceNumber <- 9 - #4;
+		^.ParameterValue.DentalPiece.DentalQuadrant <- #6;
+		^.ParameterValue.DentalPiece.DentalPieceNumber <- 9 - #5;
 	}
 )
 

@@ -1,0 +1,273 @@
+// ****************************************************************************
+//
+//	Back Office functions in Medical Appointment domain
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency
+// 	DOMAIN  : MedicalAppointments
+//	MODULE  : Functions
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: MedicalAppointmentBackOffice
+//
+// ****************************************************************************
+
+BackOfficeReturn negotiateDateTimeMedicalAppointment(Parameters parameters)
+{
+	InfoItemHistory emptyHistory;
+
+	return negotiateDateTimeMedicalAppointment2(emptyHistory, parameters);
+}
+
+BackOfficeReturn negotiateDateTimeMedicalAppointment2(InfoItemHistory history, Parameters parameters)
+{
+	Parameter parameter, emptyParameter;
+	Parameters emptyParameters, retParameters;
+	ErrorMessage errorMessage;
+	BatchRecoverPosition(parameters, 1, parameter);
+	DateTime userProposedDateTime <- parameter.ParameterValue.DateTime;
+	ParameterCategory category <- parameter.ParameterCategory;
+	BackOfficeReturn ret;
+
+	DateTime lastProposedDateTime, penultimateProposedDateTime;
+	Parameter lastParameter;
+	int size <- BatchSize( history );
+	BatchRecoverPosition( history, size, lastParameter );
+	lastProposedDateTime <- lastParameter.ParameterValue.DateTime;
+	BatchRecoverPosition( history, size - 1, lastParameter );
+	penultimateProposedDateTime <- lastParameter.ParameterValue.DateTime;
+
+	// 0. Negation parameter
+	if(category == 'negation')
+	{
+		userProposedDateTime.GeneralTime.MinTime.BaseTime <- addMinute(userProposedDateTime.GeneralTime.BaseTime);
+		Erase(userProposedDateTime.GeneralTime.BaseTime);
+	}
+
+	// 1.1 The date time provided by the user is not valid: we suppose empty parameter 
+	parameter.ParameterValue.DateTime <- userProposedDateTime;
+
+	if( checkDateTimeValidity(parameter) == 'incorrect' )
+	{
+		errorMessage <- 'negotiating_invalid_date';
+		Erase(userProposedDateTime);
+	}
+
+	// 1.2 The user says a datetime negotiation with no previous proposed date
+	if( userProposedDateTime.GeneralTime.NegotiateModifier && !! lastProposedDateTime)
+	{
+		Erase(userProposedDateTime);
+	}
+
+	// 2.1 If no date is provided we can provide one as default
+	if(!! userProposedDateTime.BaseDate && !! userProposedDateTime.MinDate && !! userProposedDateTime.MaxDate && !! userProposedDateTime.OffsetDate && !! userProposedDateTime.GeneralTime.NegotiateModifier)
+	{
+		if(userProposedDateTime.GeneralTime && lastProposedDateTime.BaseDate)
+		{
+			userProposedDateTime.BaseDate <- lastProposedDateTime.BaseDate;
+		}
+		else
+		{
+			if(ClockAskHour() > MAX_HOUR_FOR_TODAY)
+			{
+				userProposedDateTime.MinDate.BaseDate <- addDay( getCurrentBaseDate() );
+			}	
+			else
+			{
+				userProposedDateTime.MinDate.BaseDate <- getCurrentBaseDate();
+			}
+		
+			userProposedDateTime.MaxDate.BaseDate <- userProposedDateTime.MinDate.BaseDate;
+			for(int i <- 1; i <= 7; i++)
+			{
+				userProposedDateTime.MaxDate.BaseDate <- addDay( userProposedDateTime.MaxDate.BaseDate );
+			}
+		}
+	}
+
+	// 2.2 If we have only an offset date (eg, "next monday, week, month or year") we can set the base date
+	// depending if there are more datetimes in the history:
+	if(!! userProposedDateTime.BaseDate && !! userProposedDateTime.MinDate && !! userProposedDateTime.MaxDate)
+	{
+		if(userProposedDateTime.GeneralTime.NegotiateModifier)
+		{
+			if(lastProposedDateTime.BaseDate)
+			{
+				userProposedDateTime.BaseDate <- lastProposedDateTime.BaseDate;
+				NegotiateModifier modifier <- userProposedDateTime.GeneralTime.NegotiateModifier;
+				Erase(userProposedDateTime.GeneralTime);
+	
+				if(modifier == 'later')
+				{
+					userProposedDateTime.GeneralTime.MinTime.BaseTime <- addMinute(lastProposedDateTime.GeneralTime.BaseTime);
+				}
+				else
+				{
+					userProposedDateTime.GeneralTime.MaxTime.BaseTime <- subtractMinute(lastProposedDateTime.GeneralTime.BaseTime);
+				}
+			}
+			else
+			{	
+				Erase(userProposedDateTime);
+				userProposedDateTime.BaseDate <- getCurrentBaseDate();
+			}
+		}
+		else
+		{
+			BaseDate baseDate;
+			if( !! lastProposedDateTime ) 
+			{
+				baseDate <- getCurrentBaseDate();
+			}
+			else if( lastProposedDateTime.GeneralTime.NegotiateModifier )
+			{
+				baseDate <- penultimateProposedDateTime.BaseDate;
+			} 
+			else
+			{
+				baseDate <- lastProposedDateTime.BaseDate;
+			}
+
+			if(!! Filled(baseDate))
+			{
+				baseDate <- getCurrentBaseDate();
+			}
+
+			GeneralTime time <- userProposedDateTime.GeneralTime;
+
+			userProposedDateTime <- getRangeFromPeriodOfTime(baseDate, userProposedDateTime.OffsetDate);
+			userProposedDateTime.GeneralTime <- time;
+		}
+	}	
+
+	// 3. If BaseDate is provided it must be normalized
+	if( userProposedDateTime.BaseDate )
+	{
+		userProposedDateTime.BaseDate <- normalizeBaseDate(userProposedDateTime.BaseDate);
+	}
+	if( userProposedDateTime.MinDate.BaseDate )
+	{
+		userProposedDateTime.MinDate.BaseDate <- normalizeBaseDate(userProposedDateTime.MinDate.BaseDate);
+	}
+	if( userProposedDateTime.MaxDate.BaseDate )
+	{
+		userProposedDateTime.MaxDate.BaseDate <- normalizeBaseDate(userProposedDateTime.MaxDate.BaseDate);
+	}
+
+	// 4. If OffsetDate is provided it must be normalized
+	if( userProposedDateTime.OffsetDate )
+	{
+		userProposedDateTime.BaseDate <- normalizeOffsetDate(userProposedDateTime.BaseDate, userProposedDateTime.OffsetDate);
+	}
+	if( userProposedDateTime.MinDate.OffsetDate )
+	{
+		userProposedDateTime.MinDate.BaseDate <- normalizeOffsetDate(userProposedDateTime.MinDate.BaseDate, userProposedDateTime.MinDate.OffsetDate);
+	}
+	if( userProposedDateTime.MaxDate.OffsetDate )
+	{
+		userProposedDateTime.MaxDate.BaseDate <- normalizeOffsetDate(userProposedDateTime.MaxDate.BaseDate, userProposedDateTime.MaxDate.OffsetDate);
+	}
+
+	// 5. Convert to a range
+	userProposedDateTime <- convertToRange(userProposedDateTime);
+
+	// 6. Normalize Time
+	userProposedDateTime <- normalizeTime(userProposedDateTime);
+
+	// 7. Check validity of range
+	DateTime max,mindate,maxdate,current;
+	max.BaseDate <- getCurrentBaseDate();
+	for(int i <- 0; i < MAX_DAYS_AFTER; i++)
+	{
+		max.BaseDate <- addDay(max.BaseDate);
+	}
+	mindate.BaseDate <- userProposedDateTime.MinDate.BaseDate;
+	maxdate.BaseDate <- userProposedDateTime.MaxDate.BaseDate;
+	current.BaseDate <- getCurrentBaseDate();
+	// 7.1 mindate > max
+	if( greaterDateTime(mindate,max) )
+	{
+		ret.Parameters <- retParameters;
+		ret.ErrorMessage <- 'negotiating_too_in_the_future';
+
+		return ret;
+	}
+	// 7.2 current > maxdate
+	if( greaterDateTime(current,maxdate) )
+	{
+		ret.Parameters <- retParameters;
+		ret.ErrorMessage <- 'negotiating_in_the_past';
+
+		return ret;
+	}
+	// 7.3 mindate > maxdate
+	if( greaterDateTime(mindate,maxdate) )
+	{
+		ret.Parameters <- retParameters;
+		ret.ErrorMessage <- 'negotiating_invalid_range';
+
+		return ret;
+	}
+
+	// 8. Provide some availability
+	DateTimes dateTimes <- getMedicalAppointmentAvailability(userProposedDateTime);
+
+	// 9. Convert to Parameters
+	size <- BatchSize(dateTimes);
+	for(int position <- 1; position <= size; position++)
+	{
+		DateTime systemProposedDateTime;
+		BatchRecoverPosition(dateTimes, position, systemProposedDateTime);
+
+		parameter <- emptyParameter;
+		parameter.ParameterCategory <- 'terminal';
+		parameter.ParameterValue.DateTime <- systemProposedDateTime;
+		parameter.ParameterType <- 'datetime';
+		
+		BatchInsertEnd(retParameters, parameter);
+	}
+
+	// 10. There is no exact results
+	if(size == 0)
+	{
+		DateTime newUserProposedDateTime;
+
+		newUserProposedDateTime.MinDate.BaseDate <- userProposedDateTime.MinDate.BaseDate;
+		if(userProposedDateTime.GeneralTime.BaseTime)
+		{
+			newUserProposedDateTime.MinDate.GeneralTime.BaseTime.Hour <- userProposedDateTime.GeneralTime.BaseTime.Hour;
+			newUserProposedDateTime.MinDate.GeneralTime.BaseTime.Minute <- userProposedDateTime.GeneralTime.BaseTime.Minute;
+		}
+		else
+		{
+			newUserProposedDateTime.MinDate.GeneralTime.BaseTime.Hour <- 23;
+			newUserProposedDateTime.MinDate.GeneralTime.BaseTime.Minute <- 59;
+		}
+
+		newUserProposedDateTime.MinDate.BaseDate <- normalizeBaseDate(newUserProposedDateTime.MinDate.BaseDate);
+
+		dateTimes <- getMedicalAppointmentAvailability(newUserProposedDateTime);
+
+		size <- BatchSize(dateTimes);
+		for(int position <- 1; position <= size; position++)
+		{
+			DateTime systemProposedDateTime;
+			BatchRecoverPosition(dateTimes, position, systemProposedDateTime);
+	
+			parameter <- emptyParameter;
+			parameter.ParameterCategory <- 'terminal';
+			parameter.ParameterValue.DateTime <- systemProposedDateTime;
+			parameter.ParameterType <- 'datetime';
+			
+			BatchInsertEnd(retParameters, parameter);
+		}
+		
+		errorMessage <- 'approximate';
+	}
+
+	ret.Parameters <- retParameters;
+	ret.ErrorMessage <- errorMessage;
+
+	return ret;
+}

@@ -1,0 +1,215 @@
+
+
+{
+
+	KEY: <<18073876.xml>>
+
+	HEADER: <<Miles de onubense reciben al 2017 con las cámaras de Canal Sur como testigos>>
+
+	KEYWORDS: <<NOCHEVIEJA HUELVA>>
+
+	DATETIME: <<20170101T001200+0000+0000>>
+
+	CONTENT: <<Huelva, 1 ene (EFE).- Miles de onubenses han recibido al año 2017 en la Plaza de la Constitución de la capital con las cámaras de Canal Sur en directo, un acontecimiento que ha sido conducido por la periodista Toñi Moreno y el actor Miguel de Miguel.Desde poco después de las 21:00 horas ya estaban congregándose las primeras personas en la plaza del Ayuntamiento de la ciudad, para vivir en persona una retransmisión que sirve para abrir el título de Huelva como Capital
+Española de la Gastronomía, además de los actos del 525 Aniversario del 'Encuentro entre Dos Mundos'.La fiesta en la Plaza de la Constitución se inició a partir de las 23:00, y las 1.500 personas que llegaron las primeras recibieron bolsas de cotillón y uvas de la suerte, para culminar las propias campanadas con una gran traca de fuegos artificiales.Para que todo se haya podido organizar, se han establecido accesos peatonales al centro de Huelva a través de la Plaza de Las Monjas y El
+Punto y desde las calles Arcipreste Manuel González García y San Francisco, además de organizarse un dispositivo especial de seguridad con Policía Nacional, Local y seguridad privada.La retransmisión a través de Canal Sur ha sido posible mediante el trabajo coordinado de más de 40 profesionales, siete cámaras fijas y una cabeza caliente, que han llevado a toda Andalucía por primera vez desde Huelva las campanadas que anuncian la llegada del nuevo año. EFE>>
+
+	TESAURO: <<soc:sociedad-salud>>
+
+	LOCS: <<'Capital Española', 'Las Monjas', 'San Francisco', 'Huelva', 'Andalucía'>>
+
+	ORGS: <<'EFE', 'Canal', 'Policía Nacional'>>
+
+}
+
+{
+
+	KEY: <<18073931.xml>>
+
+	HEADER: <<Heladas y nieblas darán la bienvenida a 2017>>
+
+	KEYWORDS: <<EL TIEMPO>>
+
+	DATETIME: <<20170101T030300+0000+0000>>
+
+	CONTENT: <<Madrid, 1 ene (EFE).- La Agencia Estatal de Meteorología (Aemet) prevé para hoy,domingo, heladas significativas en ambas mesetas y en el área pirenaica, así como nieblas en la cuenca del Ebro y la meseta sur.En el extremo noroeste peninsular se producirá un aumento de la nubosidad durante el día hasta quedar el cielo nuboso o cubierto al final de la jornada, con lluvias en el extremo noroeste de Galicia, que podrían extenderse al resto de la mitad oeste de
+Galicia.Nuboso en el valle del Ebro e intervalos nubosos en otras zonas del tercio occidental peninsular, Baleares y el sur del área mediterránea peninsular.La Aemet destaca la posibilidad de alguna precipitación débil y ocasional en puntos del litoral sudeste de la Península y el oeste de Baleares.Predominio de cielos poco nubosos o despejados en el resto, excepto en zonas de nieblas, que podrán ser localmente persistentes y/o "engelantes" en la cuenca del Ebro y la meseta sur, sin
+descartarlas, de forma más local y con menor persistencia, en la meseta norte. Calimas en Canarias.Temperaturas diurnas en descenso en buena parte de la vertiente atlántica y valle del Ebro. Pocos cambios en el resto. Heladas de madrugada en la mayor parte del interior peninsular, mas intensas en el área pirenaica y ambas mesetas.Viento de componente sur en el litoral de Galicia, Baleares y Canarias, y del este en el litoral andaluz. Flojo en el resto.>>
+
+	TESAURO: <<cyt:ciencia-tecnologia,meteorologia>>
+
+	LOCS: <<'Canarias', 'Galicia.Nuboso', 'Galicia', 'Península', 'Ebro', 'Baleares', 'Calimas', 'Madrid', 'Aemet', 'Baleares.Predominio'>>
+
+	ORGS: <<'EFE', 'Agencia Estatal de Meteorología'>>
+
+}
+
+{
+
+	KEY: <<18074001.xml>>
+
+	HEADER: <<La madrileña Alejandra nace en los primeros segundos del 2017>>
+
+	KEYWORDS: <<NACIMIENTOS 2017>>
+
+	DATETIME: <<20170101T062800+0000+0000>>
+
+	CONTENT: <<Madrid, 1 ene (EFE).- Alejandra, una niña que ha pesado 3,170 kilogramos, es la primera bebé nacida en 2017 al haber llegado al mundo al mismo tiempo en que sonaba la primera de las campanadas con las que se suele celebrar el Año Nuevo.La niña, de madre española y que ha nacido en el Hospital Clínico de Madrid, se hizo esperar ya que la madre comenzó a dilatar a las nueve de la noche, según han apuntado a Efe fuentes del hospital."Pensamos que no le iba a tocar, que la
+habría expulsado antes del fin del año, pero al final ha nacido en 2017, con unos segundos", recalcan las mismas fuentes.Alejandra se ha adelantado a Marcos, un niño que ha nacido "sanito" en el Hospital Doce de Octubre, según han relatado fuentes de ese centro. EFEeaf>>
+
+	TESAURO: <<soc:sociedad-salud,salud>>
+
+	LOCS: <<'española', 'Madrid'>>
+
+	ORGS: <<'EFE', 'Efe'>>
+
+}
+
+{
+
+	KEY: <<18074012.xml>>
+
+	HEADER: <<Rajoy apela a la unidad contra el terror tras el atentado en Turquía>>
+
+	KEYWORDS: <<TURQUÍA TERRORISMO>>
+
+	DATETIME: <<20170101T064500+0000+0000>>
+
+	CONTENT: <<Madrid, 1 ene (EFE).- El presidente del Gobierno, Mariano Rajoy, ha expresado hoy su pesar por las víctimas del atentado terrorista que ha causado al menos 39 muertos en Estambul, tras el que ha apelado a la unidad "contra el terror".A raíz del ataque en la discoteca, en la que se celebraba una fiesta de Año Nuevo, han muerto por el momento 39 ciudadanos, entre ellos 16 extranjeros, y otras 69 personas han resultado heridas, según ha informado el ministro turco del
+Interior, Süleyman Soylu.El atacante sigue huido y está en curso una operación policial de búsqueda y captura, ha precisado Soylu.En su cuenta personal de Twitter, y en un mensaje firmado con sus iniciales, Rajoy ha indicado que sigue la evolución de lo ocurrido."Pesar por las víctimas del ataque en una discoteca de Estambul; sigo la evolución. Unidos contra el terror. España, con el pueblo turco", reza el breve texto. EFEeaf>>
+
+	TESAURO: <<tri:justicia-interior-sucesos,terrorismo>>
+
+	LOCS: <<'turco', 'España', 'Estambul', 'Madrid', 'extranjeros', 'Nuevo'>>
+
+	ORGS: <<'EFE', 'Interior', 'Twitter'>>
+
+}
+
+{
+
+	KEY: <<18074020.xml>>
+
+	HEADER: <<Ingresado en estado grave un hombre apuñalado en Madrid durante la Nochevieja>>
+
+	KEYWORDS: <<SUCESOS APUÑALAMIENTO>>
+
+	DATETIME: <<20170101T065600+0000+0000>>
+
+	CONTENT: <<Madrid, 1 ene (EFE).- Un hombre de 46 años ha ingresado esta madrugada en estado grave en el Hospital La Paz de Madrid tras haber recibido al menos una herida por arma blanca en el hemitórax, según han indicado a Efe fuentes de Emergencias Madrid.El suceso en un lugar todavía por precisar en las inmediaciones de un local de ocio a las alturas del número 1 de la calle Hermanos de Pablo del distrito de Ciudad Lineal.Sobre las 6.30 horas el Samur ha atendido al hombre, que ha sido
+estabilizado por los equipos sanitarios y ha sido trasladado con pronóstico grave, al Hospital La Paz.La Policía Nacional se ha hecho cargo de la investigación. EFEeaf>>
+
+	TESAURO: <<tri:justicia-interior-sucesos,sucesos>>
+
+	LOCS: <<'Madrid', 'Ciudad'>>
+
+	ORGS: <<'EFE', 'Paz.La Policía Nacional', 'Efe'>>
+
+}
+
+{
+
+	KEY: <<18074024.xml>>
+
+	HEADER: <<Efemérides de mañana, lunes 2 de enero de 2017>>
+
+	KEYWORDS: <<EFEMÉRIDES>>
+
+	DATETIME: <<20170101T070700+0000+0000>>
+
+	CONTENT: <<Madrid, 1 ene (EFE).- Santoral para mañana, lunes 2 de enero de 2017: santos Basilio, Gregorio Nacianceno, Adelardo, Macario y Narciso. La venida de la Virgen del Pilar a Zaragoza.El Sol sale mañana a las 07:38 y se pone a las 17:00 (Hora GMT).La Luna sale mañana a las 10:13 y se pone a las 21:23 (Hora GMT).>>
+
+	TESAURO: <<abo:multitematico>>
+
+	LOCS: <<'Madrid', 'Pilar'>>
+
+	ORGS: <<'EFE'>>
+
+}
+
+{
+
+	KEY: <<18074059.xml>>
+
+	HEADER: <<El año arranca con alzas en energía, revisión del IBI y nuevo salario mínimo>>
+
+	KEYWORDS: <<TARIFAS 2017>>
+
+	DATETIME: <<20170101T074800+0000+0000>>
+
+	CONTENT: <<Madrid, 1 ene (EFE).- El año empieza hoy con subidas en energía -gas, butano o carburantes-, del 8 % en el salario mínimo interprofesional (SMI) y del IBI en casi 1.900 municipios, mientras que el precio de otros servicios básicos como los trenes de cercanías se mantiene.En el capítulo de suministros energéticos, la subida del petróleo en las últimas semanas hace arrancar el año con incrementos en los carburantes y en la tarifa regulada del gas, así como en el mercado
+mayorista eléctrico que presionará al alza el recibo de la luz.A pesar de que el Gobierno ha congelado los peajes -que suponen la mitad de los recibos de luz y gas-, la otra parte, el componente energético encarecerá las facturas.En el caso del gas, la tarifa de último recurso (TUR) sube una media del 3,5 % desde hoy.En la electricidad, y tras la implantación del nuevo sistema en la tarifa regulada o PVPC, el incremento del recibo dependerá de cómo evolucione el mercado mayorista,
+al alza desde hace unas semanas, por lo que también aquí se esperan precios más altos.Por su parte, la bombona de butano sigue costando los 12,28 euros que marcó en noviembre y que se mantendrá hasta que se revise el tercer martes de enero.Sobre los carburantes, terminaron el año en máximos anuales -1,215 euros para el litro de gasolina y 1,105 euros para el de gasóleo- tras unas semanas de fuertes repuntes que, previsiblemente, se prolongarán en este arranque de 2017.Por lo que respecta
+a Renfe, mantiene sin cambios las tarifas de los servicios de trenes de Cercanías y Media Distancia.También siguen congeladas las tarifas del transporte público madrileño.En telecomunicaciones, Telefónica congela su cuota de abono, que se mantiene en 14,33 euros, un precio que no ha variado desde 2013.Correos aplica a partir de hoy una subida de 5 céntimos de euro para la carta nacional ordinaria, que pasará a costar 0,50 euros.El año también empieza con el nuevo salario mínimo
+interprofesional (SMI) que sube un 8 %, hasta 707,60 euros, el mayor incremento anual de los últimos 30 años, pactado por el Gobierno con el PSOE a cambio de su apoyo para sacar adelante el techo de gasto del Estado.Muy por debajo de esta subida de la retribución mínima se queda la actualización de las pensiones, que sólo sube el 0,25 %, el mínimo establecido en la ley que desligó esta prestación pública de la evolución de la inflación.En el capítulo de impuestos, el importe que pagan
+anualmente los propietarios de viviendas, locales y terrenos en concepto del impuesto de bienes inmuebles (IBI) sube a partir de hoy en 1.895 municipios españoles, mientras que bajará en 557 localidades.La variación se deriva de la actualización del catastro para 2.452 municipios.A lo largo del año que hoy empieza también podrían encarecerse las bebidas azucaradas después de que el Gobierno haya anunciado su intención de crear un impuesto específico sobre este producto por
+cuestiones de salud, aunque con una recaudación anual estimada de 200 millones de euros. EFEnca/sgb/eaf>>
+
+	TESAURO: <<eco:economia,sectores-empresas,energia-mineria>>
+
+	LOCS: <<'IBI', 'Madrid'>>
+
+	ORGS: <<'Renfe', 'Telefónica', 'EFE', 'PSOE', 'Correos'>>
+
+}
+
+{
+
+	KEY: <<18074070.xml>>
+
+	HEADER: <<Domingo, 1 de enero de 2017>>
+
+	KEYWORDS: <<EFE. NACIONAL. PREVISIONES>>
+
+	DATETIME: <<20170101T080000+0000+0000>>
+
+	CONTENT: <<RAJOY EXTERIORES -Madrid- El jefe del Gobierno, Mariano Rajoy, afronta en 2017 una agenda internacional plagada de reuniones en el seno de la UE y que tiene como primera cita ya cerrada la que celebrarán en Lisboa a finales de enero los líderes de los países europeos mediterráneos.>>
+
+	TESAURO: <<abo:multitematico>>
+
+	LOCS: <<'Lisboa'>>
+
+	ORGS: <<'Madrid', 'UE'>>
+
+}
+
+{
+
+	KEY: <<18074095.xml>>
+
+	HEADER: <<Lara, primera catalana del año, nace en Salt un segundo después de medianoche>>
+
+	KEYWORDS: <<NACIMIENTOS 2017>>
+
+	DATETIME: <<20170101T080500+0000+0000>>
+
+	CONTENT: <<Barcelona, 1 ene (EFE).- El primer catalán del año es una niña, se llama Lara y ha nacido cuando pasaba un segundo de la medianoche en el hospital Santa Caterina de Salt (Girona), según ha informado la Generalitat.La pequeña, que ha pesado 2,520 kilos al nacer, ha llegado al mundo con la primera campanada del nuevo año, por lo que es probable que sea también la primera española nacida en 2017.Como es tradición, el conseller de Salud, Antoni Comin, visitará al bebé y
+su madre a las 12.00 horas de hoy en el hospital. EFEgb/ltm>>
+
+	TESAURO: <<soc:sociedad-salud,gente-curiosidades>>
+
+	LOCS: <<'española', 'Barcelona', 'Girona'>>
+
+	ORGS: <<'EFE'>>
+
+}
+
+{
+
+	KEY: <<18074097.xml>>
+
+	HEADER: <<Domingo, 1 de enero de 2017>>
+
+	KEYWORDS: <<EFE. TV. PREVISIONES>>
+
+	DATETIME: <<20170101T080500+0000+0000>>
+
+	CONTENT: <<Madrid, 30 dic (EFE TV).->>
+
+	TESAURO: <<abo:multitematico,previsiones>>
+
+	LOCS: <<'Madrid'>>
+
+	ORGS: <<'EFE TV'>>
+
+}

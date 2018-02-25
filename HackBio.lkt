@@ -30,10 +30,22 @@ lektaProject
         setupParserTokenNotFounds = lexSignChunk
         ParlanceSensor:On
 
-    //#Include "Kernel/Tools/Polyglot/ParlanceSensorCorpora.lkt"
-
     /* Mandatory: */
     #Include "Config/Config.lkt"
+	  // #Include "Polyglot/ParlanceSensorCorpora.lkt"
+
+    conceptualModel
+      conceptualFramework
+      {
+        conceptualFrameworkDescriptor: "HackbioSciELO"
+        conceptualFrameworkFileName: "HackbioSciELO.cso"	// ConceptualScheme Object (Binary)
+        conceptualFrameworkIndexConcept
+        conceptualFrameworkSpecification: "HackbioSciELO/HackbioSciELO.lcs"		// Lekta Conceptual Scheme Source Code
+        conceptualFrameworkProperties:
+        {
+            conceptualFrameworkDeactivateDialogueSearch
+        }
+      }
 
 
     classModel
@@ -95,15 +107,16 @@ lektaProject
 
     scriboModel forLanguage English
     	ScriboSchemata
-      		#Include < FLUINCLUDE "MainGeneration.lkt" >
       		#Include "HackBioIndexGeneration.lkt"
+      		#Include < FLUINCLUDE "MainGeneration.lkt" >
 
   	scriboModel forLanguage Polish
     	ScriboSchemata
-      		#Include < FLUINCLUDE "MainGeneration.lkt" >
       		#Include "HackBioIndexGeneration.lkt"
+      		#Include < FLUINCLUDE "MainGeneration.lkt" >
 
 	scriboModel forLanguage Spanish
     	ScriboSchemata
-      		#Include < FLUINCLUDE "MainGeneration.lkt" >
       		#Include "HackBioIndexGeneration.lkt"
+      		#Include < FLUINCLUDE "MainGeneration.lkt" >
+

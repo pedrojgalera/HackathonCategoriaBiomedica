@@ -1,0 +1,44 @@
+// ****************************************************************************
+//
+//      Setup file for parlance sensor
+//
+// ****************************************************************************
+//
+//	PROJECT	: Fluency
+// 	DOMAIN  : Polyglot
+//	MODULE  : -
+//	PACKAGE	: -
+// 	FOLDER  : -
+// 	FILE	: ParlanceSensorCorpora
+//
+// ****************************************************************************
+
+parlanceSensorModel 
+{
+	ParlanceSensorSetupModifyThreshold: 90
+
+	// EN: English
+	ParlanceSensorTrainingLanguage
+	{
+		LanguageCode            1
+		LanguageDescriptor      "English"
+		LanguageTrainingCorpus	"Polyglot/EN-1M-Training.pl"
+    }
+    
+	// PL: Polish
+	ParlanceSensorTrainingLanguage 
+	{
+		LanguageCode            2
+		LanguageDescriptor      "Polish"
+		LanguageTrainingCorpus 	"Polyglot/PL-1M-Training.pl"
+	}
+    
+	// ES: Spanish
+	ParlanceSensorTrainingLanguage 
+	{
+		LanguageCode            3
+		LanguageDescriptor      "Spanish"
+		LanguageTrainingCorpus 	"Polyglot/ES-1M-Training.pl"
+	}
+}
+
